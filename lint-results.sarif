@@ -1,0 +1,154 @@
+{
+    "$schema" : "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+    "version" : "2.1.0",
+    "runs" : [
+        {
+            "tool": {
+                "driver": {
+                    "name": "Android Lint",
+                    "fullName": "Android Lint (in gradle)",
+                    "version": "7.1.3",
+                    "semanticVersion": "7.1.3",
+                    "organization": "Google",
+                    "informationUri": "https://developer.android.com/studio/write/lint",
+                    "fullDescription": {
+                        "text": "Static analysis originally for Android source code but now performing general analysis"
+                    },
+                    "language": "en-US",
+                    "rules": [
+                        {
+                            "id": "ObsoleteSdkInt",
+                            "shortDescription": {
+                                "text": "Obsolete SDK_INT Version Check"
+                            },
+                            "fullDescription": {
+                                "text": "This check flags version checks that are not necessary, because the minSdkVersion (or surrounding known API level) is already at least as high as the version checked for.\n\nSimilarly, it also looks for resources in -vNN folders, such as values-v14 where the version qualifier is less than or equal to the minSdkVersion, where the contents should be merged into the best folder.",
+                                "markdown": "This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.\n\nSimilarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
+                            },
+                            "defaultConfiguration": {
+                                "level": "warning",
+                                "rank": 50
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Performance"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "SQLInjectionIssueId",
+                            "shortDescription": {
+                                "text": "The software constructs all or part of an SQL command using externally-influenced input \n            from an upstream component, but it does not neutralize or incorrectly neutralizes \n            special elements that could modify the intended SQL command when it is sent to a \n            downstream component"
+                            },
+                            "fullDescription": {
+                                "text": "Without sufficient removal or quoting of SQL syntax in user-controllable inputs, the \ngenerated SQL query can cause those inputs to be interpreted as SQL instead of ordinary \nuser data. This can be used to alter query logic to bypass security checks, or to \ninsert additional statements that modify the back-end database, possibly including \nexecution of system commands."
+                            },
+                            "defaultConfiguration": {
+                                "level": "warning",
+                                "rank": 80
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Security"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            "originalUriBaseIds": {
+                "%SRCROOT%": {
+                    "uri": "file:///C:/projects/_sec/lint-sandbox/"
+                }
+            },
+            "results": [
+                {
+                    "ruleId": "SQLInjectionIssueId",
+                    "ruleIndex": 1,
+                    "message": {
+                        "text": "The software constructs all or part of an SQL command using externally-influenced input \n            from an upstream component, but it does not neutralize or incorrectly neutralizes \n            special elements that could modify the intended SQL command when it is sent to a \n            downstream component"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
+                                },
+                                "region": {
+                                    "startLine": 15,
+                                    "startColumn": 12,
+                                    "endLine": 15,
+                                    "endColumn": 19,
+                                    "charOffset": 397,
+                                    "charLength": 7,
+                                    "snippet": {
+                                        "text": "execSQL"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 13,
+                                    "endLine": 18,
+                                    "snippet": {
+                                        "text": "\n    public void onCreate(SQLiteDatabase db) {\n        db.execSQL(\"INSERT INTO notes(title,note) VALUES ('office', '10 Meetings. 5 Calls. Lunch with CEO');\");\n    }"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "109aeda61e49791f"
+                    }
+                },
+                {
+                    "ruleId": "ObsoleteSdkInt",
+                    "ruleIndex": 0,
+                    "message": {
+                        "text": "This folder configuration (v24) is unnecessary; minSdkVersion is 28. Merge all the resources in this folder into drawable.",
+                        "markdown": "This folder configuration (`v24`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `drawable`."
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\res\\drawable-v24"
+                                },
+                                "region": {
+                                    "startLine": 1
+                                }                            }
+                        }
+                    ],
+                    "fixes": [
+                    ],
+                    "partialFingerprints": {
+                    }
+                },
+                {
+                    "ruleId": "ObsoleteSdkInt",
+                    "ruleIndex": 0,
+                    "message": {
+                        "text": "This folder configuration (v26) is unnecessary; minSdkVersion is 28. Merge all the resources in this folder into mipmap-anydpi.",
+                        "markdown": "This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `mipmap-anydpi`."
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\res\\mipmap-anydpi-v26"
+                                },
+                                "region": {
+                                    "startLine": 1
+                                }                            }
+                        }
+                    ],
+                    "fixes": [
+                    ],
+                    "partialFingerprints": {
+                    }
+                }
+            ]
+        }
+    ]
+}
