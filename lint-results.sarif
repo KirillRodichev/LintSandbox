@@ -17,6 +17,24 @@
                     "language": "en-US",
                     "rules": [
                         {
+                            "id": "InsufficientlyRandomValuesIssueId",
+                            "shortDescription": {
+                                "text": "Use of java.util.Random is prohibited"
+                            },
+                            "fullDescription": {
+                                "text": "When software generates predictable values in a context requiring unpredictability, it \nmay be possible for an attacker to guess the next value that will be generated, and \nuse this guess to impersonate another user or access sensitive information."
+                            },
+                            "defaultConfiguration": {
+                                "level": "warning",
+                                "rank": 70
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Security"
+                                ]
+                            }
+                        },
+                        {
                             "id": "ObsoleteSdkInt",
                             "shortDescription": {
                                 "text": "Obsolete SDK_INT Version Check"
@@ -63,8 +81,76 @@
             },
             "results": [
                 {
+                    "ruleId": "InsufficientlyRandomValuesIssueId",
+                    "ruleIndex": 0,
+                    "message": {
+                        "text": "Use of java.util.Random is prohibited"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
+                                },
+                                "region": {
+                                    "startLine": 23,
+                                    "startColumn": 16,
+                                    "endLine": 23,
+                                    "endColumn": 28,
+                                    "charOffset": 672,
+                                    "charLength": 12,
+                                    "snippet": {
+                                        "text": "new Random()"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 21,
+                                    "endLine": 26,
+                                    "snippet": {
+                                        "text": "\n    public Random getRandom() {\n        return new Random();\n    }"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "fixes": [
+                        {
+                            "description": {
+                                "text": "Use java.security.SecureRandom"
+                            },
+                            "artifactChanges": [
+                                {
+                                    "artifactLocation": {
+                                        "uriBaseId": "%SRCROOT%",
+                                        "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
+                                    },
+                                    "replacements": [
+                                        {
+                                            "deletedRegion": {
+                                                "startLine": 23,
+                                                "startColumn": 20,
+                                                "charOffset": 676,
+                                                "endLine": 23,
+                                                "endColumn": 26,
+                                                "charLength": 6
+                                            },
+                                            "insertedContent": {
+                                                "text": "SecureRandom\n"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "22a42af455d6f50f"
+                    }
+                },
+                {
                     "ruleId": "SQLInjectionIssueId",
-                    "ruleIndex": 1,
+                    "ruleIndex": 2,
                     "message": {
                         "text": "The software constructs all or part of an SQL command using externally-influenced input \n            from an upstream component, but it does not neutralize or incorrectly neutralizes \n            special elements that could modify the intended SQL command when it is sent to a \n            downstream component"
                     },
@@ -76,19 +162,19 @@
                                     "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
                                 },
                                 "region": {
-                                    "startLine": 15,
+                                    "startLine": 19,
                                     "startColumn": 12,
-                                    "endLine": 15,
+                                    "endLine": 19,
                                     "endColumn": 19,
-                                    "charOffset": 397,
+                                    "charOffset": 517,
                                     "charLength": 7,
                                     "snippet": {
                                         "text": "execSQL"
                                     }
                                 },
                                 "contextRegion": {
-                                    "startLine": 13,
-                                    "endLine": 18,
+                                    "startLine": 17,
+                                    "endLine": 22,
                                     "snippet": {
                                         "text": "\n    public void onCreate(SQLiteDatabase db) {\n        db.execSQL(\"INSERT INTO notes(title,note) VALUES ('office', '10 Meetings. 5 Calls. Lunch with CEO');\");\n    }"
                                     }
@@ -102,7 +188,7 @@
                 },
                 {
                     "ruleId": "ObsoleteSdkInt",
-                    "ruleIndex": 0,
+                    "ruleIndex": 1,
                     "message": {
                         "text": "This folder configuration (v24) is unnecessary; minSdkVersion is 28. Merge all the resources in this folder into drawable.",
                         "markdown": "This folder configuration (`v24`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `drawable`."
@@ -126,7 +212,7 @@
                 },
                 {
                     "ruleId": "ObsoleteSdkInt",
-                    "ruleIndex": 0,
+                    "ruleIndex": 1,
                     "message": {
                         "text": "This folder configuration (v26) is unnecessary; minSdkVersion is 28. Merge all the resources in this folder into mipmap-anydpi.",
                         "markdown": "This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `mipmap-anydpi`."

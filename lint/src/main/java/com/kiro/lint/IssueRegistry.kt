@@ -5,6 +5,7 @@ package com.kiro.lint
 import com.android.tools.lint.client.api.IssueRegistry
 import com.android.tools.lint.detector.api.*
 import com.kiro.lint.detectors.IncorrectDefaultPermissionsDetector
+import com.kiro.lint.detectors.InsufficientCryptographyDetector
 import com.kiro.lint.detectors.InsufficientlyRandomValuesDetector
 import com.kiro.lint.detectors.SQLInjectionDetector
 
@@ -14,6 +15,7 @@ class IssueRegistry : IssueRegistry() {
             IncorrectDefaultPermissionsDetector.ISSUE,
             SQLInjectionDetector.ISSUE,
             InsufficientlyRandomValuesDetector.ISSUE,
+            InsufficientCryptographyDetector.ISSUE,
         )
 
     override val api: Int = CURRENT_API

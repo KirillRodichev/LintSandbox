@@ -4,7 +4,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
 import java.io.File;
+import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+
+import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
 
 public class DetectorTest {
     /*public void saveCredentials() {
@@ -17,5 +21,9 @@ public class DetectorTest {
 
     public Random getRandom() {
         return new Random();
+    }
+
+    public void cipher() throws NoSuchPaddingException, NoSuchAlgorithmException {
+        Cipher des = Cipher.getInstance("DES/CBC/NoPadding");
     }
 }
