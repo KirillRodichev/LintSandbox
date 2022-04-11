@@ -2,28 +2,13 @@ package com.kiro.lint.detectors
 
 import com.android.tools.lint.detector.api.*
 import com.intellij.psi.PsiMethod
+import com.kiro.lint.constants.Cryptography
+import com.kiro.lint.constants.Cryptography.*
 import org.jetbrains.uast.UCallExpression
 import org.jetbrains.uast.UExpression
 
 @Suppress("UnstableApiUsage")
 class InsufficientCryptographyDetector : Detector(), SourceCodeScanner {
-    private enum class CipherAlgorithmNamesEnum(val algorithmName: String) {
-        AES("AES"),
-        AES_WRAP("AESWrap"),
-        ARCFOUR("ARCFOUR"),
-        BLOWFISH("Blowfish"),
-        CCM("CCM"),
-        DES("DES"),
-        DES_EDE("DESede"),
-        DES_EDE_WRAP("DESedeWrap"),
-        ECIES("ECIES"),
-        GCM("GCM"),
-        RC2("RC2"),
-        RC4("RC4"),
-        RC5("RC5"),
-        RSA("RSA"),
-    }
-
     override fun getApplicableMethodNames(): List<String>? =
         listOf("getInstance")
 
@@ -32,37 +17,88 @@ class InsufficientCryptographyDetector : Detector(), SourceCodeScanner {
         node: UCallExpression,
         method: PsiMethod,
     ) {
-        if (context.evaluator.isMemberInClass(method, "javax.crypto.Cipher")) {
+        val evaluator = context.evaluator
+        if (evaluator.isMemberInClass(method, JavaCryptoPackagesEnum.CIPHER.packageName)) {
             val argument = node.valueArguments[0]
             val value = ConstantEvaluator.evaluate(context, argument)
             if (value is String) {
                 val algorithmName = value.split("/")[0]
-                if (algorithmName != CipherAlgorithmNamesEnum.AES.algorithmName) {
-                    reportUsage(context, node, argument, value)
+                if (algorithmName != CipherAlgorithmNamesEnum.AES.algorithmName &&
+                    algorithmName != CipherAlgorithmNamesEnum.RSA.algorithmName
+                ) {
+                    reportUsage(context, argument, value, "AES/CBC/NoPadding")
                 }
             }
+        } else if (evaluator.isMemberInClass(method, JavaCryptoPackagesEnum.MESSAGE_DIGEST.packageName)) {
+            checkPackage(
+                context,
+                node,
+                JavaCryptoPackagesEnum.MESSAGE_DIGEST.packageName,
+                MessageDigestAlgorithmNamesEnum.SHA_256.algorithmName,
+            )
+        } else if (evaluator.isMemberInClass(method, JavaCryptoPackagesEnum.KEY_GENERATOR.packageName)) {
+            checkPackage(
+                context,
+                node,
+                JavaCryptoPackagesEnum.KEY_GENERATOR.packageName,
+                KeyGeneratorAlgorithmNamesEnum.AES.algorithmName,
+            )
+        }
+    }
+
+    private fun checkPackage(
+        context: JavaContext,
+        node: UCallExpression,
+        packageName: String,
+        replaceWith: String,
+    ) {
+        val argument = node.valueArguments[0]
+        val value = ConstantEvaluator.evaluate(context, argument)
+        val insufficientAlgorithmNames = Cryptography.packageNameToInsufficientAlgorithmsMap[packageName]
+        if (value is String && insufficientAlgorithmNames != null) {
+            reportIfIsInsufficientAlgorithm(
+                insufficientAlgorithmNames,
+                value,
+                context,
+                argument,
+                value,
+                replaceWith,
+            )
+        }
+    }
+
+    private fun reportIfIsInsufficientAlgorithm(
+        insufficientAlgorithmNames: List<String>,
+        algorithm: String,
+        context: JavaContext,
+        node: UExpression,
+        replaceText: String,
+        replaceWith: String,
+    ) {
+        if (insufficientAlgorithmNames.contains(algorithm)) {
+            reportUsage(context, node, replaceText, replaceWith)
         }
     }
 
     private fun reportUsage(
         context: JavaContext,
-        node: UCallExpression,
-        argument: UExpression,
-        replaceText: String
+        node: UExpression,
+        replaceText: String,
+        replaceWith: String,
     ) {
         val quickfixData = LintFix.create()
-            .name("Replace with AES")
+            .name("Replace with a sufficient algorithm")
             .replace()
-            .text("DES/CBC/NoPadding")
-            .with("AES/CBC/NoPadding")
-            /*.robot(true) // Can be applied automatically.
-            .independent(true) // Does not conflict with other auto-fixes.*/
+            .text(replaceText)
+            .with(replaceWith)
+            .robot(true)
+            .independent(true)
             .build()
 
         context.report(
             issue = ISSUE,
-            scope = argument,
-            location = context.getLocation(argument),
+            scope = node,
+            location = context.getLocation(node),
             message = ISSUE.getBriefDescription(TextFormat.TEXT),
             quickfixData = quickfixData,
         )

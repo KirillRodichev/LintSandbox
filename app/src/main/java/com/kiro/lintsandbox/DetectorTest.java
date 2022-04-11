@@ -4,10 +4,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
 import java.io.File;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 
 public class DetectorTest {
@@ -24,6 +26,8 @@ public class DetectorTest {
     }
 
     public void cipher() throws NoSuchPaddingException, NoSuchAlgorithmException {
-        Cipher des = Cipher.getInstance("DES/CBC/NoPadding");
+        Cipher des = Cipher.getInstance("AES/CBC/NoPadding");
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        KeyGenerator keyGen = KeyGenerator.getInstance("DES");
     }
 }
