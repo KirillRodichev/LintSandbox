@@ -13,9 +13,9 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 
 public class DetectorTest {
-    /*public void saveCredentials() {
+    public void saveCredentials() {
         File uinfo = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/.uinfo.txt");
-    }*/
+    }
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("INSERT INTO notes(title,note) VALUES ('office', '10 Meetings. 5 Calls. Lunch with CEO');");
@@ -26,8 +26,8 @@ public class DetectorTest {
     }
 
     public void cipher() throws NoSuchPaddingException, NoSuchAlgorithmException {
-        Cipher des = Cipher.getInstance("AES/CBC/NoPadding");
-        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        Cipher des = Cipher.getInstance("DES/CBC/NoPadding");
+        MessageDigest messageDigest = MessageDigest.getInstance("MD2");
         KeyGenerator keyGen = KeyGenerator.getInstance("DES");
     }
 }

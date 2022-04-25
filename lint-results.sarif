@@ -17,6 +17,60 @@
                     "language": "en-US",
                     "rules": [
                         {
+                            "id": "IncorrectDefaultPermissionsIssueId",
+                            "shortDescription": {
+                                "text": "App can read/write to External Storage. Any App can read data written to External Storage."
+                            },
+                            "fullDescription": {
+                                "text": "App can read/write to External Storage. Any App can read data written to External Storage."
+                            },
+                            "defaultConfiguration": {
+                                "level": "warning",
+                                "rank": 70
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Security"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "InsecureWebViewImplementationIssueId",
+                            "shortDescription": {
+                                "text": "The software provides an Applications Programming Interface (API) or similar interface \n            for interaction with external actors, but the interface includes a dangerous method or \n            function that is not properly restricted."
+                            },
+                            "fullDescription": {
+                                "text": "This weakness can lead to a wide variety of resultant weaknesses, depending on the \nbehavior of the exposed method. It can apply to any number of technologies and \napproaches, such as ActiveX controls, Java functions, IOCTLs, and so on."
+                            },
+                            "defaultConfiguration": {
+                                "level": "warning",
+                                "rank": 70
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Security"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "InsufficientCryptographyIssueId",
+                            "shortDescription": {
+                                "text": "The use of a broken or risky cryptographic algorithm is an unnecessary risk that may \n            result in the exposure of sensitive information."
+                            },
+                            "fullDescription": {
+                                "text": "The use of a non-standard algorithm is dangerous because a determined attacker may be \nable to break the algorithm and compromise whatever data has been protected. \nWell-known techniques may exist to break the algorithm."
+                            },
+                            "defaultConfiguration": {
+                                "level": "warning",
+                                "rank": 70
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Security"
+                                ]
+                            }
+                        },
+                        {
                             "id": "InsufficientlyRandomValuesIssueId",
                             "shortDescription": {
                                 "text": "Use of java.util.Random is prohibited"
@@ -31,6 +85,24 @@
                             "properties": {
                                 "tags": [
                                     "Security"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "LintError",
+                            "shortDescription": {
+                                "text": "Lint Failure"
+                            },
+                            "fullDescription": {
+                                "text": "This issue type represents a problem running lint itself. Examples include failure to find bytecode for source files (which means certain detectors could not be run), parsing errors in lint configuration files, etc.\n\nThese errors are not errors in your own code, but they are shown to make it clear that some checks were not completed."
+                            },
+                            "defaultConfiguration": {
+                                "level": "error",
+                                "rank": 10
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Lint"
                                 ]
                             }
                         },
@@ -70,6 +142,24 @@
                                     "Security"
                                 ]
                             }
+                        },
+                        {
+                            "id": "UnusedResources",
+                            "shortDescription": {
+                                "text": "Unused resources"
+                            },
+                            "fullDescription": {
+                                "text": "Unused resources make applications larger and slow down builds.\n\nThe unused resource check can ignore tests. If you want to include resources that are only referenced from tests, consider packaging them in a test source set instead.\n\nYou can include test sources in the unused resource check by setting the system property lint.unused-resources.include-tests=true, and to exclude them (usually for performance reasons), use lint.unused-resources.exclude-tests=true."
+                            },
+                            "defaultConfiguration": {
+                                "level": "warning",
+                                "rank": 80
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Performance"
+                                ]
+                            }
                         }
                     ]
                 }
@@ -81,8 +171,388 @@
             },
             "results": [
                 {
-                    "ruleId": "InsufficientlyRandomValuesIssueId",
+                    "ruleId": "LintError",
+                    "ruleIndex": 4,
+                    "message": {
+                        "text": "Unexpected failure during lint analysis of MainActivity.kt (this is a bug in lint or one of the libraries it depends on)\n\n\nThe crash seems to involve the detector com.kiro.lint.detectors.InsecureWebViewImplementationDetector.\nYou can try disabling it with something like this:\n    android {\n        lintOptions {\n            disable \"InsecureWebViewImplementationIssueId\"\n        }\n    }\n\nStack: NullPointerException:InsecureWebViewImplementationDetector$createUastHandler$1.visitDeclarationsExpression(InsecureWebViewImplementationDetector.kt:69)←UElementVisitor$DispatchPsiVisitor.visitDeclarationsExpression(UElementVisitor.kt:640)←UDeclarationsExpression$DefaultImpls.accept(UDeclarationsExpression.kt:20)←KotlinUDeclarationsExpression.accept(KotlinUDeclarationsExpression.kt:24)←ImplementationUtilsKt.acceptList(implementationUtils.kt:23)←UBlockExpression$DefaultImpls.accept(UBlockExpression.kt:21)←KotlinAbstractUBlockExpression.accept(KotlinAbstractUBlockExpression.kt:12)←UMethod$DefaultImpls.accept(UMethod.kt:43)\n\nYou can run with --stacktrace or set environment variable LINT_PRINT_STACKTRACE=true to dump a full stacktrace to stdout.",
+                        "markdown": "Unexpected failure during lint analysis of MainActivity.kt (this is a bug in lint or one of the libraries it depends on)\n\n\nThe crash seems to involve the detector `com.kiro.lint.detectors.InsecureWebViewImplementationDetector`.\nYou can try disabling it with something like this:\n    android {\n        lintOptions {\n            disable \"InsecureWebViewImplementationIssueId\"\n        }\n    }\n\nStack: `NullPointerException:InsecureWebViewImplementationDetector$createUastHandler$1.visitDeclarationsExpression(InsecureWebViewImplementationDetector.kt:69)←UElementVisitor$DispatchPsiVisitor.visitDeclarationsExpression(UElementVisitor.kt:640)←UDeclarationsExpression$DefaultImpls.accept(UDeclarationsExpression.kt:20)←KotlinUDeclarationsExpression.accept(KotlinUDeclarationsExpression.kt:24)←ImplementationUtilsKt.acceptList(implementationUtils.kt:23)←UBlockExpression$DefaultImpls.accept(UBlockExpression.kt:21)←KotlinAbstractUBlockExpression.accept(KotlinAbstractUBlockExpression.kt:12)←UMethod$DefaultImpls.accept(UMethod.kt:43)`\n\nYou can run with --stacktrace or set environment variable `LINT_PRINT_STACKTRACE=true` to dump a full stacktrace to stdout."
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\MainActivity.kt"
+                                },
+                                "region": {
+                                    "startLine": 1
+                                }                            }
+                        }
+                    ],
+                    "fixes": [
+                    ],
+                    "partialFingerprints": {
+                    }
+                },
+                {
+                    "ruleId": "IncorrectDefaultPermissionsIssueId",
                     "ruleIndex": 0,
+                    "message": {
+                        "text": "App can read/write to External Storage. Any App can read data written to External Storage."
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
+                                },
+                                "region": {
+                                    "startLine": 19,
+                                    "startColumn": 43,
+                                    "endLine": 19,
+                                    "endColumn": 70,
+                                    "charOffset": 515,
+                                    "charLength": 27,
+                                    "snippet": {
+                                        "text": "getExternalStorageDirectory"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 17,
+                                    "endLine": 22,
+                                    "snippet": {
+                                        "text": "public class DetectorTest {\n    public void saveCredentials() {\n        File uinfo = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + \"/.uinfo.txt\");\n    }"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "e1551bba709ed600"
+                    }
+                },
+                {
+                    "ruleId": "InsecureWebViewImplementationIssueId",
+                    "ruleIndex": 1,
+                    "message": {
+                        "text": "The software provides an Applications Programming Interface (API) or similar interface \n            for interaction with external actors, but the interface includes a dangerous method or \n            function that is not properly restricted."
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
+                                },
+                                "region": {
+                                    "startLine": 20,
+                                    "startColumn": 17,
+                                    "endLine": 20,
+                                    "endColumn": 24,
+                                    "charOffset": 577,
+                                    "charLength": 7,
+                                    "snippet": {
+                                        "text": "loadUrl"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 18,
+                                    "endLine": 23,
+                                    "snippet": {
+                                        "text": "        Intent i = new Intent();\n        String str = i.getStringExtra(\"reg_url\");\n        webView.loadUrl(str);\n        webView.loadUrl(i.getStringExtra(\"reg_url\"));"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "8e53de065bd47605"
+                    }
+                },
+                {
+                    "ruleId": "InsecureWebViewImplementationIssueId",
+                    "ruleIndex": 1,
+                    "message": {
+                        "text": "The software provides an Applications Programming Interface (API) or similar interface \n            for interaction with external actors, but the interface includes a dangerous method or \n            function that is not properly restricted."
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
+                                },
+                                "region": {
+                                    "startLine": 21,
+                                    "startColumn": 17,
+                                    "endLine": 21,
+                                    "endColumn": 24,
+                                    "charOffset": 607,
+                                    "charLength": 7,
+                                    "snippet": {
+                                        "text": "loadUrl"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 19,
+                                    "endLine": 24,
+                                    "snippet": {
+                                        "text": "        String str = i.getStringExtra(\"reg_url\");\n        webView.loadUrl(str);\n        webView.loadUrl(i.getStringExtra(\"reg_url\"));\n    }"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "c1292991cf93de76"
+                    }
+                },
+                {
+                    "ruleId": "InsecureWebViewImplementationIssueId",
+                    "ruleIndex": 1,
+                    "message": {
+                        "text": "The software provides an Applications Programming Interface (API) or similar interface \n            for interaction with external actors, but the interface includes a dangerous method or \n            function that is not properly restricted."
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
+                                },
+                                "region": {
+                                    "startLine": 21,
+                                    "startColumn": 27,
+                                    "endLine": 21,
+                                    "endColumn": 41,
+                                    "charOffset": 617,
+                                    "charLength": 14,
+                                    "snippet": {
+                                        "text": "getStringExtra"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 19,
+                                    "endLine": 24,
+                                    "snippet": {
+                                        "text": "        String str = i.getStringExtra(\"reg_url\");\n        webView.loadUrl(str);\n        webView.loadUrl(i.getStringExtra(\"reg_url\"));\n    }"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "c1292991cf93de76"
+                    }
+                },
+                {
+                    "ruleId": "InsufficientCryptographyIssueId",
+                    "ruleIndex": 2,
+                    "message": {
+                        "text": "The use of a broken or risky cryptographic algorithm is an unnecessary risk that may \n            result in the exposure of sensitive information."
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
+                                },
+                                "region": {
+                                    "startLine": 31,
+                                    "startColumn": 41,
+                                    "endLine": 31,
+                                    "endColumn": 60,
+                                    "charOffset": 944,
+                                    "charLength": 19,
+                                    "snippet": {
+                                        "text": "\"DES/CBC/NoPadding\""
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 29,
+                                    "endLine": 34,
+                                    "snippet": {
+                                        "text": "\n    public void cipher() throws NoSuchPaddingException, NoSuchAlgorithmException {\n        Cipher des = Cipher.getInstance(\"DES/CBC/NoPadding\");\n        MessageDigest messageDigest = MessageDigest.getInstance(\"MD2\");"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "fixes": [
+                        {
+                            "description": {
+                                "text": "Replace with a sufficient algorithm"
+                            },
+                            "artifactChanges": [
+                                {
+                                    "artifactLocation": {
+                                        "uriBaseId": "%SRCROOT%",
+                                        "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
+                                    },
+                                    "replacements": [
+                                        {
+                                            "deletedRegion": {
+                                                "startLine": 31,
+                                                "startColumn": 42,
+                                                "charOffset": 945,
+                                                "endLine": 31,
+                                                "endColumn": 59,
+                                                "charLength": 17
+                                            },
+                                            "insertedContent": {
+                                                "text": "AES/CBC/NoPadding\n"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "fc44f18cfd65e96d"
+                    }
+                },
+                {
+                    "ruleId": "InsufficientCryptographyIssueId",
+                    "ruleIndex": 2,
+                    "message": {
+                        "text": "The use of a broken or risky cryptographic algorithm is an unnecessary risk that may \n            result in the exposure of sensitive information."
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
+                                },
+                                "region": {
+                                    "startLine": 32,
+                                    "startColumn": 65,
+                                    "endLine": 32,
+                                    "endColumn": 70,
+                                    "charOffset": 1030,
+                                    "charLength": 5,
+                                    "snippet": {
+                                        "text": "\"MD2\""
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 30,
+                                    "endLine": 35,
+                                    "snippet": {
+                                        "text": "    public void cipher() throws NoSuchPaddingException, NoSuchAlgorithmException {\n        Cipher des = Cipher.getInstance(\"DES/CBC/NoPadding\");\n        MessageDigest messageDigest = MessageDigest.getInstance(\"MD2\");\n        KeyGenerator keyGen = KeyGenerator.getInstance(\"DES\");"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "fixes": [
+                        {
+                            "description": {
+                                "text": "Replace with a sufficient algorithm"
+                            },
+                            "artifactChanges": [
+                                {
+                                    "artifactLocation": {
+                                        "uriBaseId": "%SRCROOT%",
+                                        "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
+                                    },
+                                    "replacements": [
+                                        {
+                                            "deletedRegion": {
+                                                "startLine": 32,
+                                                "startColumn": 66,
+                                                "charOffset": 1031,
+                                                "endLine": 32,
+                                                "endColumn": 69,
+                                                "charLength": 3
+                                            },
+                                            "insertedContent": {
+                                                "text": "SHA-256\n"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "352be349d515cbaa"
+                    }
+                },
+                {
+                    "ruleId": "InsufficientCryptographyIssueId",
+                    "ruleIndex": 2,
+                    "message": {
+                        "text": "The use of a broken or risky cryptographic algorithm is an unnecessary risk that may \n            result in the exposure of sensitive information."
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
+                                },
+                                "region": {
+                                    "startLine": 33,
+                                    "startColumn": 56,
+                                    "endLine": 33,
+                                    "endColumn": 61,
+                                    "charOffset": 1093,
+                                    "charLength": 5,
+                                    "snippet": {
+                                        "text": "\"DES\""
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 31,
+                                    "endLine": 36,
+                                    "snippet": {
+                                        "text": "        Cipher des = Cipher.getInstance(\"DES/CBC/NoPadding\");\n        MessageDigest messageDigest = MessageDigest.getInstance(\"MD2\");\n        KeyGenerator keyGen = KeyGenerator.getInstance(\"DES\");\n    }"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "fixes": [
+                        {
+                            "description": {
+                                "text": "Replace with a sufficient algorithm"
+                            },
+                            "artifactChanges": [
+                                {
+                                    "artifactLocation": {
+                                        "uriBaseId": "%SRCROOT%",
+                                        "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
+                                    },
+                                    "replacements": [
+                                        {
+                                            "deletedRegion": {
+                                                "startLine": 33,
+                                                "startColumn": 57,
+                                                "charOffset": 1094,
+                                                "endLine": 33,
+                                                "endColumn": 60,
+                                                "charLength": 3
+                                            },
+                                            "insertedContent": {
+                                                "text": "AES\n"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "67736d83273ce922"
+                    }
+                },
+                {
+                    "ruleId": "InsufficientlyRandomValuesIssueId",
+                    "ruleIndex": 3,
                     "message": {
                         "text": "Use of java.util.Random is prohibited"
                     },
@@ -94,19 +564,19 @@
                                     "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
                                 },
                                 "region": {
-                                    "startLine": 23,
+                                    "startLine": 27,
                                     "startColumn": 16,
-                                    "endLine": 23,
+                                    "endLine": 27,
                                     "endColumn": 28,
-                                    "charOffset": 672,
+                                    "charOffset": 800,
                                     "charLength": 12,
                                     "snippet": {
                                         "text": "new Random()"
                                     }
                                 },
                                 "contextRegion": {
-                                    "startLine": 21,
-                                    "endLine": 26,
+                                    "startLine": 25,
+                                    "endLine": 30,
                                     "snippet": {
                                         "text": "\n    public Random getRandom() {\n        return new Random();\n    }"
                                     }
@@ -128,10 +598,10 @@
                                     "replacements": [
                                         {
                                             "deletedRegion": {
-                                                "startLine": 23,
+                                                "startLine": 27,
                                                 "startColumn": 20,
-                                                "charOffset": 676,
-                                                "endLine": 23,
+                                                "charOffset": 804,
+                                                "endLine": 27,
                                                 "endColumn": 26,
                                                 "charLength": 6
                                             },
@@ -150,7 +620,7 @@
                 },
                 {
                     "ruleId": "SQLInjectionIssueId",
-                    "ruleIndex": 2,
+                    "ruleIndex": 6,
                     "message": {
                         "text": "The software constructs all or part of an SQL command using externally-influenced input \n            from an upstream component, but it does not neutralize or incorrectly neutralizes \n            special elements that could modify the intended SQL command when it is sent to a \n            downstream component"
                     },
@@ -162,19 +632,19 @@
                                     "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\DetectorTest.java"
                                 },
                                 "region": {
-                                    "startLine": 19,
+                                    "startLine": 23,
                                     "startColumn": 12,
-                                    "endLine": 19,
+                                    "endLine": 23,
                                     "endColumn": 19,
-                                    "charOffset": 517,
+                                    "charOffset": 645,
                                     "charLength": 7,
                                     "snippet": {
                                         "text": "execSQL"
                                     }
                                 },
                                 "contextRegion": {
-                                    "startLine": 17,
-                                    "endLine": 22,
+                                    "startLine": 21,
+                                    "endLine": 26,
                                     "snippet": {
                                         "text": "\n    public void onCreate(SQLiteDatabase db) {\n        db.execSQL(\"INSERT INTO notes(title,note) VALUES ('office', '10 Meetings. 5 Calls. Lunch with CEO');\");\n    }"
                                     }
@@ -188,7 +658,7 @@
                 },
                 {
                     "ruleId": "ObsoleteSdkInt",
-                    "ruleIndex": 1,
+                    "ruleIndex": 5,
                     "message": {
                         "text": "This folder configuration (v24) is unnecessary; minSdkVersion is 28. Merge all the resources in this folder into drawable.",
                         "markdown": "This folder configuration (`v24`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `drawable`."
@@ -212,7 +682,7 @@
                 },
                 {
                     "ruleId": "ObsoleteSdkInt",
-                    "ruleIndex": 1,
+                    "ruleIndex": 5,
                     "message": {
                         "text": "This folder configuration (v26) is unnecessary; minSdkVersion is 28. Merge all the resources in this folder into mipmap-anydpi.",
                         "markdown": "This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `mipmap-anydpi`."
@@ -232,6 +702,47 @@
                     "fixes": [
                     ],
                     "partialFingerprints": {
+                    }
+                },
+                {
+                    "ruleId": "UnusedResources",
+                    "ruleIndex": 7,
+                    "message": {
+                        "text": "The resource R.layout.activity_java appears to be unused",
+                        "markdown": "The resource `R.layout.activity_java` appears to be unused"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\res\\layout\\activity_java.xml"
+                                },
+                                "region": {
+                                    "startLine": 2,
+                                    "startColumn": 1,
+                                    "endLine": 24,
+                                    "endColumn": 53,
+                                    "charOffset": 40,
+                                    "charLength": 908,
+                                    "snippet": {
+                                        "text": "<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".JavaClass\">\r\n\r\n    <TextView\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"Hello World!\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintLeft_toLeftOf=\"parent\"\r\n        app:layout_constraintRight_toRightOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n    <WebView\r\n        android:id=\"@+id/webview\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        />\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 1,
+                                    "endLine": 24,
+                                    "snippet": {
+                                        "text": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".JavaClass\">\r\n\r\n    <TextView\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"Hello World!\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintLeft_toLeftOf=\"parent\"\r\n        app:layout_constraintRight_toRightOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n    <WebView\r\n        android:id=\"@+id/webview\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        />\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "fixes": [
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "4a89ab1b41eb2830"
                     }
                 }
             ]
