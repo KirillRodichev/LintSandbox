@@ -50,14 +50,34 @@ class Cryptography {
         RC2("RC2"),
     }
 
+    /*
+    Confidentiality algorithms: AES-GCM-256 or ChaCha20-Poly1305
+    Integrity algorithms: SHA-256, SHA-384, SHA-512, Blake2, the SHA-3 family
+    Digital signature algorithms: RSA (3072 bits and higher), ECDSA with NIST P-384
+    Key establishment algorithms: RSA (3072 bits and higher), DH (3072 bits or higher), ECDH with NIST P-384
+     */
     companion object {
         val packageNameToInsufficientAlgorithmsMap = mapOf(
-            JavaCryptoPackagesEnum.MESSAGE_DIGEST.packageName to listOf(
+            JavaCryptoPackagesEnum.CIPHER to listOf(
+                CipherAlgorithmNamesEnum.AES_WRAP.algorithmName,
+                CipherAlgorithmNamesEnum.ARCFOUR.algorithmName,
+                CipherAlgorithmNamesEnum.BLOWFISH.algorithmName,
+                CipherAlgorithmNamesEnum.CCM.algorithmName,
+                CipherAlgorithmNamesEnum.DES.algorithmName,
+                CipherAlgorithmNamesEnum.DES_EDE.algorithmName,
+                CipherAlgorithmNamesEnum.DES_EDE_WRAP.algorithmName,
+                CipherAlgorithmNamesEnum.ECIES.algorithmName,
+                CipherAlgorithmNamesEnum.GCM.algorithmName,
+                CipherAlgorithmNamesEnum.RC2.algorithmName,
+                CipherAlgorithmNamesEnum.RC4.algorithmName,
+                CipherAlgorithmNamesEnum.RC5.algorithmName,
+            ),
+            JavaCryptoPackagesEnum.MESSAGE_DIGEST to listOf(
                 MessageDigestAlgorithmNamesEnum.MD2.algorithmName,
                 MessageDigestAlgorithmNamesEnum.MD5.algorithmName,
                 MessageDigestAlgorithmNamesEnum.SHA_1.algorithmName
             ),
-            JavaCryptoPackagesEnum.KEY_GENERATOR.packageName to listOf(
+            JavaCryptoPackagesEnum.KEY_GENERATOR to listOf(
                 KeyGeneratorAlgorithmNamesEnum.ARCFOUR.algorithmName,
                 KeyGeneratorAlgorithmNamesEnum.BLOWFISH.algorithmName,
                 KeyGeneratorAlgorithmNamesEnum.DES.algorithmName,

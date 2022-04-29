@@ -53,7 +53,7 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
         }
     }
 
-    override fun getApplicableUastTypes(): List<Class<out UElement>>? =
+    override fun getApplicableUastTypes(): List<Class<out UElement>> =
         listOf(UDeclarationsExpression::class.java)
 
     /**
@@ -62,7 +62,7 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
      * - the resulting variable is written to "stringExtraVariableName" and
      * - the "getStringExtra" caller is written to "stringExtraCallerInstanceName"
      */
-    override fun createUastHandler(context: JavaContext): UElementHandler? =
+    override fun createUastHandler(context: JavaContext): UElementHandler =
         object : UElementHandler() {
             override fun visitDeclarationsExpression(node: UDeclarationsExpression) {
                 val declaration = node.declarations[0] // var str: java.lang.String = i.getStringExtra("reg_url")
@@ -80,8 +80,12 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
             }
         }
 
-    override fun getApplicableMethodNames(): List<String>? =
-        listOf("getStringExtra", "loadUrl")
+    override fun getApplicableMethodNames(): List<String> = listOf(
+        "loadUrl",
+        "getStringExtra",
+        "addJavascriptInterface",
+        "setAllowUniversalAccessFromFileURLs"
+    )
 
     override fun visitMethodCall(
         context: JavaContext,
@@ -92,7 +96,12 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
         val nodeFileName = context.getNameLocation(node).file.name
         if (exportedActivityNames.contains(nodeFileName.dropLast(5))) {
             val evaluator = context.evaluator
+            // loadUrl, addJavascriptInterface
             if (evaluator.isMemberInClass(method, "android.webkit.WebView")) {
+                if (method.name == "addJavascriptInterface" && isCallerMatched && isVariableMatched) {
+                    reportUsage(context, node, method, IssueTypesEnum.ADD_JS_INTERFACE)
+                    return
+                }
                 val argument = node.valueArguments[0]
                 val argumentMethodName = argument.sourcePsi.findContaining(UCallExpression::class.java)?.methodName
 
@@ -101,16 +110,24 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
                     isCallerMatched = true
                 } else if (argumentMethodName == "getStringExtra") {
                     // in case of the getStringExtra was passed directly to the loadUrl method
-                    reportUsage(context, node, method)
+                    reportUsage(context, node, method, IssueTypesEnum.LOAD_URL)
                     return
                 }
+            // getStringExtra
             } else if (evaluator.isMemberInClass(method, "android.content.Intent")) {
                 if (stringExtraCallerInstanceName == node.receiver.toString()) {
                     isVariableMatched = true
                 }
+            // setAllowUniversalAccessFromFileURLs
+            } else if (evaluator.isMemberInClass(method, "android.webkit.WebSettings")) {
+                val argument = node.valueArguments[0]
+                if (argument.evaluate() == true) {
+                    reportUsage(context, node, method, IssueTypesEnum.ALLOW_UNIVERSAL_ACCESS)
+                    return
+                }
             }
             if (isCallerMatched && isVariableMatched) {
-                reportUsage(context, node, method)
+                reportUsage(context, node, method, IssueTypesEnum.LOAD_URL)
             }
         }
     }
@@ -119,6 +136,7 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
         context: JavaContext,
         node: UCallExpression,
         method: PsiMethod,
+        issueType: IssueTypesEnum,
     ) {
         context.report(
             issue = ISSUE,
@@ -128,8 +146,14 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
                 includeReceiver = false,
                 includeArguments = false
             ),
-            message = ISSUE.getBriefDescription(TextFormat.TEXT),
+            message = IssueTypeToReportMessageMap[issueType] ?: ISSUE.getBriefDescription(TextFormat.TEXT),
         )
+    }
+
+    enum class IssueTypesEnum {
+        LOAD_URL,
+        ADD_JS_INTERFACE,
+        ALLOW_UNIVERSAL_ACCESS,
     }
 
     companion object {
@@ -152,6 +176,12 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
             }
         }
 
+        val IssueTypeToReportMessageMap = mapOf(
+            IssueTypesEnum.LOAD_URL to "Loading url from an intent to exported WebView allows other applications to have access to the target application",
+            IssueTypesEnum.ADD_JS_INTERFACE to "Creating interface between webpage's JS and the client side Java allows XSS and token stealing",
+            IssueTypesEnum.ALLOW_UNIVERSAL_ACCESS to "Allowing to access content from any origin in the exported WebView allows attackers to read arbitrary files",
+        )
+
         private const val InsecureWebViewImplementationIssueId = "InsecureWebViewImplementationIssueId"
         private const val InsecureWebViewImplementationIssueDescription = """
             The software provides an Applications Programming Interface (API) or similar interface 
@@ -164,7 +194,8 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
             approaches, such as ActiveX controls, Java functions, IOCTLs, and so on.
         """
 
-        private val IMPLEMENTATION = Implementation( // TODO: fix scope
+        // TODO: fix scope
+        private val IMPLEMENTATION = Implementation(
             InsecureWebViewImplementationDetector::class.java,
             EnumSet.of(Scope.MANIFEST, Scope.JAVA_FILE),
             Scope.MANIFEST_SCOPE,

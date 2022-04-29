@@ -38,13 +38,13 @@ class SQLInjectionDetector : Detector(), SourceCodeScanner {
 
     companion object {
         private const val SQLInjectionIssueIssueId = "SQLInjectionIssueId"
-        private val SQLInjectionIssueIssueDescription = """
+        private const val SQLInjectionIssueIssueDescription = """
             The software constructs all or part of an SQL command using externally-influenced input 
             from an upstream component, but it does not neutralize or incorrectly neutralizes 
             special elements that could modify the intended SQL command when it is sent to a 
             downstream component
         """
-        private val SQLInjectionIssueIssueExplanation = """
+        private const val SQLInjectionIssueIssueExplanation = """
             Without sufficient removal or quoting of SQL syntax in user-controllable inputs, the 
             generated SQL query can cause those inputs to be interpreted as SQL instead of ordinary 
             user data. This can be used to alter query logic to bypass security checks, or to 

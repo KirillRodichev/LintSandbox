@@ -26,8 +26,14 @@ public class DetectorTest {
     }
 
     public void cipher() throws NoSuchPaddingException, NoSuchAlgorithmException {
-        Cipher des = Cipher.getInstance("DES/CBC/NoPadding");
+        Cipher des = Cipher.getInstance("AES/ECB/NoPadding");
+        Cipher aes = Cipher.getInstance("");
         MessageDigest messageDigest = MessageDigest.getInstance("MD2");
+        MessageDigest messageDigest1 = MessageDigest.getInstance("SHA-256");
         KeyGenerator keyGen = KeyGenerator.getInstance("DES");
+    }
+
+    public String getIpAddress() {
+        return "127.0.0.1";
     }
 }

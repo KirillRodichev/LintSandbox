@@ -10,9 +10,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val myWebView: WebView = findViewById(R.id.webview)
+        /*val myWebView: WebView = findViewById(R.id.webview)
         val intent = Intent(this, MainActivity::class.java)
         val str = intent.getStringExtra("reg_url") ?: ""
-        myWebView.loadUrl(str)
+        myWebView.loadUrl(str)*/
     }
 }

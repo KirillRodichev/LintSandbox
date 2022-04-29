@@ -9,8 +9,7 @@ import org.jetbrains.uast.UExpression
 
 @Suppress("UnstableApiUsage")
 class InsufficientCryptographyDetector : Detector(), SourceCodeScanner {
-    override fun getApplicableMethodNames(): List<String>? =
-        listOf("getInstance")
+    override fun getApplicableMethodNames(): List<String> = listOf("getInstance")
 
     override fun visitMethodCall(
         context: JavaContext,
@@ -20,27 +19,45 @@ class InsufficientCryptographyDetector : Detector(), SourceCodeScanner {
         val evaluator = context.evaluator
         if (evaluator.isMemberInClass(method, JavaCryptoPackagesEnum.CIPHER.packageName)) {
             val argument = node.valueArguments[0]
-            val value = ConstantEvaluator.evaluate(context, argument)
-            if (value is String) {
-                val algorithmName = value.split("/")[0]
-                if (algorithmName != CipherAlgorithmNamesEnum.AES.algorithmName &&
-                    algorithmName != CipherAlgorithmNamesEnum.RSA.algorithmName
+            val argumentValue = argument.evaluate()
+            if (argumentValue is String) {
+                val algorithmParts = argumentValue.split("/")
+                val algorithmName = algorithmParts.getOrNull(0)
+                val algorithmMode = algorithmParts.getOrNull(1)
+                val algorithmPadding = algorithmParts.getOrNull(2)
+                var reportMessage: String? = null
+
+                val isInsufficientCypherUsed = Cryptography
+                    .packageNameToInsufficientAlgorithmsMap[JavaCryptoPackagesEnum.CIPHER]
+                    ?.contains(algorithmName) == true
+                if (isInsufficientCypherUsed) {
+                    reportMessage = packageSpecificReportMessagesMap[SpecificMessageKeysEnum.Generic]!!.format(algorithmName)
+                } else if (
+                    algorithmMode == "CBC" &&
+                    (algorithmPadding == "PKCS5Padding" || algorithmPadding == "PKCS7Padding")
                 ) {
-                    reportUsage(context, argument, value, "AES/CBC/NoPadding")
+                    reportMessage = packageSpecificReportMessagesMap[SpecificMessageKeysEnum.CBC]!!
+                } else if (
+                    algorithmMode == "ECB"
+                ) {
+                    reportMessage = packageSpecificReportMessagesMap[SpecificMessageKeysEnum.ECB]!!
+                }
+                if (reportMessage != null) {
+                    reportUsage(context, argument, argumentValue, "AES/CBC/NoPadding", reportMessage)
                 }
             }
         } else if (evaluator.isMemberInClass(method, JavaCryptoPackagesEnum.MESSAGE_DIGEST.packageName)) {
             checkPackage(
                 context,
                 node,
-                JavaCryptoPackagesEnum.MESSAGE_DIGEST.packageName,
+                JavaCryptoPackagesEnum.MESSAGE_DIGEST,
                 MessageDigestAlgorithmNamesEnum.SHA_256.algorithmName,
             )
         } else if (evaluator.isMemberInClass(method, JavaCryptoPackagesEnum.KEY_GENERATOR.packageName)) {
             checkPackage(
                 context,
                 node,
-                JavaCryptoPackagesEnum.KEY_GENERATOR.packageName,
+                JavaCryptoPackagesEnum.KEY_GENERATOR,
                 KeyGeneratorAlgorithmNamesEnum.AES.algorithmName,
             )
         }
@@ -49,19 +66,19 @@ class InsufficientCryptographyDetector : Detector(), SourceCodeScanner {
     private fun checkPackage(
         context: JavaContext,
         node: UCallExpression,
-        packageName: String,
+        packageName: JavaCryptoPackagesEnum,
         replaceWith: String,
     ) {
         val argument = node.valueArguments[0]
-        val value = ConstantEvaluator.evaluate(context, argument)
+        val argumentValue = argument.evaluate()
         val insufficientAlgorithmNames = Cryptography.packageNameToInsufficientAlgorithmsMap[packageName]
-        if (value is String && insufficientAlgorithmNames != null) {
+        if (argumentValue is String && insufficientAlgorithmNames != null) {
             reportIfIsInsufficientAlgorithm(
                 insufficientAlgorithmNames,
-                value,
+                argumentValue,
                 context,
                 argument,
-                value,
+                argumentValue,
                 replaceWith,
             )
         }
@@ -85,9 +102,10 @@ class InsufficientCryptographyDetector : Detector(), SourceCodeScanner {
         node: UExpression,
         replaceText: String,
         replaceWith: String,
+        message: String = ISSUE.getBriefDescription(TextFormat.TEXT),
     ) {
         val quickfixData = LintFix.create()
-            .name("Replace with a sufficient algorithm")
+            .name("Replace with a sufficient algorithm: %s".format(replaceWith))
             .replace()
             .text(replaceText)
             .with(replaceWith)
@@ -99,12 +117,24 @@ class InsufficientCryptographyDetector : Detector(), SourceCodeScanner {
             issue = ISSUE,
             scope = node,
             location = context.getLocation(node),
-            message = ISSUE.getBriefDescription(TextFormat.TEXT),
+            message = message,
             quickfixData = quickfixData,
         )
     }
 
     companion object {
+        enum class SpecificMessageKeysEnum {
+            CBC,
+            ECB,
+            Generic,
+        }
+
+        val packageSpecificReportMessagesMap = mapOf(
+            SpecificMessageKeysEnum.CBC to "The App uses the encryption mode CBC with PKCS5/PKCS7 padding. This configuration is vulnerable to padding oracle attacks.",
+            SpecificMessageKeysEnum.ECB to "The ECB mode is known to be a weak",
+            SpecificMessageKeysEnum.Generic to "The %s is known to be a weak cryptographic algorithm."
+        )
+
         private const val InsufficientCryptographyIssueId = "InsufficientCryptographyIssueId"
         private const val InsufficientCryptographyIssueDescription = """
             The use of a broken or risky cryptographic algorithm is an unnecessary risk that may 
