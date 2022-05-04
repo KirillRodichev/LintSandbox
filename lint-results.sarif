@@ -35,6 +35,43 @@
                             }
                         },
                         {
+                            "id": "MissingClass",
+                            "shortDescription": {
+                                "text": "Missing registered class"
+                            },
+                            "fullDescription": {
+                                "text": "If a class is referenced in the manifest or in a layout file, it must also exist in the project (or in one of the libraries included by the project. This check helps uncover typos in registration names, or attempts to rename or move classes without updating the XML references\nproperly."
+                            },
+                            "defaultConfiguration": {
+                                "level": "error",
+                                "rank": 30
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Correctness"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "NotProtectedBroadcastReceiverId",
+                            "shortDescription": {
+                                "text": "A Broadcast Receiver is found to be shared with other apps on the device therefore             leaving it accessible to any other application on the device.",
+                                "markdown": "A Broadcast Receiver is found to be shared with other apps on the device therefore \\\n            leaving it accessible to any other application on the device."
+                            },
+                            "fullDescription": {
+                                "text": "A Broadcast Receiver is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device."
+                            },
+                            "defaultConfiguration": {
+                                "level": "warning",
+                                "rank": 80
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Security"
+                                ]
+                            }
+                        },
+                        {
                             "id": "ObsoleteSdkInt",
                             "shortDescription": {
                                 "text": "Obsolete SDK_INT Version Check"
@@ -80,6 +117,45 @@
                 }
             },
             "results": [
+                {
+                    "ruleId": "MissingClass",
+                    "ruleIndex": 1,
+                    "message": {
+                        "text": "Class referenced in the manifest, com.inn.GlobalService.Version.UpdatedVersionAvailable, was not found in the project or the libraries",
+                        "markdown": "Class referenced in the manifest, `com.inn.GlobalService.Version.UpdatedVersionAvailable`, was not found in the project or the libraries"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\AndroidManifest.xml"
+                                },
+                                "region": {
+                                    "startLine": 29,
+                                    "startColumn": 33,
+                                    "endLine": 29,
+                                    "endColumn": 86,
+                                    "charOffset": 1144,
+                                    "charLength": 53,
+                                    "snippet": {
+                                        "text": "com.inn.GlobalService.Version.UpdatedVersionAvailable"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 27,
+                                    "endLine": 32,
+                                    "snippet": {
+                                        "text": "            </intent-filter>\r\n        </activity>\r\n        <receiver android:name=\"com.inn.GlobalService.Version.UpdatedVersionAvailable\" android:enabled=\"true\" android:process=\":remote\"\r\n            android:exported=\"false\">\r"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "f502aaf7a78758f9"
+                    }
+                },
                 {
                     "ruleId": "InsecureWebViewImplementationIssueId",
                     "ruleIndex": 0,
@@ -271,8 +347,146 @@
                     }
                 },
                 {
+                    "ruleId": "NotProtectedBroadcastReceiverId",
+                    "ruleIndex": 2,
+                    "message": {
+                        "text": "A Broadcast Receiver is found to be shared with other apps on the device therefore             leaving it accessible to any other application on the device."
+                    },
+                    "level": "error",
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\AndroidManifest.xml"
+                                },
+                                "region": {
+                                    "startLine": 15,
+                                    "startColumn": 13,
+                                    "endLine": 15,
+                                    "endColumn": 36,
+                                    "charOffset": 556,
+                                    "charLength": 23,
+                                    "snippet": {
+                                        "text": "android:exported=\"true\""
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 13,
+                                    "endLine": 18,
+                                    "snippet": {
+                                        "text": "        <activity\r\n            android:name=\".MainActivity\"\r\n            android:exported=\"true\">\r\n            <intent-filter>\r"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "fixes": [
+                        {
+                            "description": {
+                                "text": "Replace android:exported=\"true\""
+                            },
+                            "artifactChanges": [
+                                {
+                                    "artifactLocation": {
+                                        "uriBaseId": "%SRCROOT%",
+                                        "uri": "app\\src\\main\\AndroidManifest.xml"
+                                    },
+                                    "replacements": [
+                                        {
+                                            "deletedRegion": {
+                                                "startLine": 15,
+                                                "startColumn": 13,
+                                                "charOffset": 556,
+                                                "endLine": 15,
+                                                "endColumn": 36,
+                                                "charLength": 23
+                                            },
+                                            "insertedContent": {
+                                                "text": "android:exported=\"false\"\n"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "33d1682923468a8f"
+                    }
+                },
+                {
+                    "ruleId": "NotProtectedBroadcastReceiverId",
+                    "ruleIndex": 2,
+                    "message": {
+                        "text": "A Broadcast Receiver is found to be shared with other apps on the device therefore             leaving it accessible to any other application on the device."
+                    },
+                    "level": "error",
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\AndroidManifest.xml"
+                                },
+                                "region": {
+                                    "startLine": 22,
+                                    "startColumn": 45,
+                                    "endLine": 22,
+                                    "endColumn": 68,
+                                    "charOffset": 856,
+                                    "charLength": 23,
+                                    "snippet": {
+                                        "text": "android:exported=\"true\""
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 20,
+                                    "endLine": 25,
+                                    "snippet": {
+                                        "text": "            </intent-filter>\r\n        </activity>\r\n        <activity android:name=\".JavaClass\" android:exported=\"true\">\r\n            <intent-filter>\r"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "fixes": [
+                        {
+                            "description": {
+                                "text": "Replace android:exported=\"true\""
+                            },
+                            "artifactChanges": [
+                                {
+                                    "artifactLocation": {
+                                        "uriBaseId": "%SRCROOT%",
+                                        "uri": "app\\src\\main\\AndroidManifest.xml"
+                                    },
+                                    "replacements": [
+                                        {
+                                            "deletedRegion": {
+                                                "startLine": 22,
+                                                "startColumn": 45,
+                                                "charOffset": 856,
+                                                "endLine": 22,
+                                                "endColumn": 68,
+                                                "charLength": 23
+                                            },
+                                            "insertedContent": {
+                                                "text": "android:exported=\"false\"\n"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "bca9c064db2cc352"
+                    }
+                },
+                {
                     "ruleId": "ObsoleteSdkInt",
-                    "ruleIndex": 1,
+                    "ruleIndex": 3,
                     "message": {
                         "text": "This folder configuration (v24) is unnecessary; minSdkVersion is 28. Merge all the resources in this folder into drawable.",
                         "markdown": "This folder configuration (`v24`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `drawable`."
@@ -296,7 +510,7 @@
                 },
                 {
                     "ruleId": "ObsoleteSdkInt",
-                    "ruleIndex": 1,
+                    "ruleIndex": 3,
                     "message": {
                         "text": "This folder configuration (v26) is unnecessary; minSdkVersion is 28. Merge all the resources in this folder into mipmap-anydpi.",
                         "markdown": "This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `mipmap-anydpi`."
@@ -320,7 +534,7 @@
                 },
                 {
                     "ruleId": "UnusedResources",
-                    "ruleIndex": 2,
+                    "ruleIndex": 4,
                     "message": {
                         "text": "The resource R.layout.activity_java appears to be unused",
                         "markdown": "The resource `R.layout.activity_java` appears to be unused"

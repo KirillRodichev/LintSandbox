@@ -33,8 +33,8 @@ class IPAddressDisclosureDetector : Detector(), SourceCodeScanner {
     }
 
     companion object {
-        private const val IPAddressDisclosureIssueIssueId = "IPAddressDisclosureIssueId"
-        private const val IPAddressDisclosureIssueIssueDescription = """
+        private const val IPAddressDisclosureIssueId = "IPAddressDisclosureIssueId"
+        private const val IPAddressDisclosureIssueDescription = """
             The app exposes ip address
         """
         private val IMPLEMENTATION = Implementation(
@@ -48,9 +48,9 @@ class IPAddressDisclosureDetector : Detector(), SourceCodeScanner {
          * url: https://cwe.mitre.org/data/definitions/200.html
          */
         val ISSUE = Issue.create(
-            id = IPAddressDisclosureIssueIssueId,
-            briefDescription = IPAddressDisclosureIssueIssueDescription,
-            explanation = IPAddressDisclosureIssueIssueDescription,
+            id = IPAddressDisclosureIssueId,
+            briefDescription = IPAddressDisclosureIssueDescription,
+            explanation = IPAddressDisclosureIssueDescription,
             category = Category.SECURITY,
             priority = 3,
             severity = Severity.WARNING,

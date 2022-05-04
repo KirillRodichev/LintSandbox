@@ -1,9 +1,10 @@
 package com.kiro.lint.detectors
 
-import com.android.SdkConstants.*
+import com.android.SdkConstants
 import com.android.tools.lint.client.api.UElementHandler
 import com.android.tools.lint.detector.api.*
 import com.android.utils.forEach
+import com.android.utils.subtag
 import com.intellij.psi.JavaTokenType.IDENTIFIER
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.impl.source.tree.JavaElementType.METHOD_CALL_EXPRESSION
@@ -24,7 +25,7 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
     private var isVariableMatched: Boolean = false
     private var exportedActivityNames: ArrayList<String> = ArrayList()
 
-    override fun getApplicableElements() = listOf(TAG_MANIFEST)
+    override fun getApplicableElements() = listOf(SdkConstants.TAG_MANIFEST)
 
     /**
      * Fills the array of exported activities
@@ -35,14 +36,18 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
      */
     override fun visitElement(context: XmlContext, element: Element) {
         val document = context.client.getMergedManifest(context.project)
-        val activities = document?.getElementsByTagName(TAG_ACTIVITY)
+        val activities = document?.getElementsByTagName(SdkConstants.TAG_ACTIVITY)
         activities?.forEach { activity ->
-            val name = activity.attributes.getNamedItemNS(ANDROID_NS, ATTRIBUTE_NAME)?.textContent
+            val name = activity.attributes.getNamedItemNS(
+                SdkConstants.ANDROID_URI,
+                SdkConstants.ATTR_NAME,
+            )?.textContent
             if (name != null) {
-                val exportedAttribute = activity.attributes.getNamedItemNS(ANDROID_NS, ATTRIBUTE_EXPORTED)?.textContent
-                val intentFilter = activity.childNodes.find { node ->
-                    node.nodeName == TAG_INTENT_FILTER
-                }
+                val exportedAttribute = activity.attributes.getNamedItemNS(
+                    SdkConstants.ANDROID_URI,
+                    SdkConstants.ATTR_EXPORTED,
+                )?.textContent
+                val intentFilter = element.subtag(SdkConstants.TAG_INTENT_FILTER)
                 if (
                     exportedAttribute == "true" || // exported explicitly
                     intentFilter != null && exportedAttribute != "false" // exported implicitly
@@ -157,25 +162,6 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
     }
 
     companion object {
-        private const val ANDROID_NS = "http://schemas.android.com/apk/res/android"
-
-        private const val ATTRIBUTE_NAME = "name"
-        private const val ATTRIBUTE_EXPORTED = "exported"
-
-        fun NodeList?.find(fn: (node: Node) -> Boolean): Node? {
-            if (this == null) {
-                return null
-            } else {
-                for (i in 0 until this.length) {
-                    val node = this.item(i)
-                    if (fn(node)) {
-                        return node
-                    }
-                }
-                return null
-            }
-        }
-
         val IssueTypeToReportMessageMap = mapOf(
             IssueTypesEnum.LOAD_URL to "Loading url from an intent to exported WebView allows other applications to have access to the target application",
             IssueTypesEnum.ADD_JS_INTERFACE to "Creating interface between webpage's JS and the client side Java allows XSS and token stealing",
