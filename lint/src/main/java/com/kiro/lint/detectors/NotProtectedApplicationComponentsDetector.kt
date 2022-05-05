@@ -4,10 +4,11 @@ import com.android.SdkConstants
 import com.android.sdklib.AndroidVersion.VersionCodes.S
 import com.android.tools.lint.detector.api.*
 import com.android.utils.subtag
+import com.kiro.lint.utils.Utils
 import org.w3c.dom.Element
 
 @Suppress("UnstableApiUsage")
-class NotProtectedApplicationConfigurationDetector : Detector(), XmlScanner {
+class NotProtectedApplicationComponentsDetector : Detector(), XmlScanner {
     override fun getApplicableElements() = listOf(
         SdkConstants.TAG_ACTIVITY,
         SdkConstants.TAG_ACTIVITY_ALIAS,
@@ -18,22 +19,24 @@ class NotProtectedApplicationConfigurationDetector : Detector(), XmlScanner {
     override fun visitElement(context: XmlContext, element: Element) {
         val intentFilter = element.subtag(SdkConstants.TAG_INTENT_FILTER)
         val exported = element.getAttributeNodeNS(SdkConstants.ANDROID_URI, SdkConstants.ATTR_EXPORTED)
+        val componentName = element.getAttributeNodeNS(SdkConstants.ANDROID_URI, SdkConstants.ATTR_NAME).value
 
+        // TODO: consider excluding components with permissions
         if (intentFilter != null && exported == null) {
             val incident = Incident(
                 ISSUE,
                 element,
                 context.getNameLocation(element),
-                ISSUE.getBriefDescription(TextFormat.TEXT),
+                getMessageByComponentType(componentName, element.tagName),
                 createSetToFalseFix("Add android:exported=\"false\"")
             )
             context.report(incident, map())
-        } else if (exported.value == SdkConstants.VALUE_TRUE && !isLaunchable(intentFilter)) {
+        } else if (exported.value == SdkConstants.VALUE_TRUE && !Utils.isLaunchable(intentFilter)) {
             val incident = Incident(
                 ISSUE,
                 exported,
                 context.getLocation(exported),
-                ISSUE.getBriefDescription(TextFormat.TEXT),
+                getMessageByComponentType(componentName, element.tagName),
                 createSetToFalseFix("Replace android:exported=\"true\"")
             )
             context.report(incident, map())
@@ -47,16 +50,6 @@ class NotProtectedApplicationConfigurationDetector : Detector(), XmlScanner {
         return true
     }
 
-    private fun isLaunchable(intentFilterTag: Element?) =
-        intentFilterTag
-            ?.subtag(SdkConstants.TAG_ACTION)
-            ?.getAttributeNS(SdkConstants.ANDROID_URI, SdkConstants.ATTR_NAME)
-            ?.equals(MAIN_ACTION) == true &&
-        intentFilterTag
-            .subtag(SdkConstants.TAG_CATEGORY)
-            ?.getAttributeNS(SdkConstants.ANDROID_URI, SdkConstants.ATTR_NAME)
-            ?.equals(CATEGORY_LAUNCHER) == true
-
     private fun createSetToFalseFix(displayName: String) = fix()
         .name(displayName)
         .set()
@@ -66,25 +59,37 @@ class NotProtectedApplicationConfigurationDetector : Detector(), XmlScanner {
         .build()
 
     companion object {
-        private const val MAIN_ACTION = "android.intent.action.MAIN"
-        private const val CATEGORY_LAUNCHER = "android.intent.category.LAUNCHER"
+        private const val NotProtectedApplicationComponentsId = "NotProtectedApplicationComponentsId"
 
-        private const val NotProtectedApplicationConfigurationId = "NotProtectedApplicationConfigurationId"
-        private const val NotProtectedApplicationConfigurationDescription = """
-            A Broadcast Receiver is found to be shared with other apps on the device therefore \
-            leaving it accessible to any other application on the device.
-        """
+        private fun getMessageByComponentType(
+            componentNameAttr: String,
+            componentName: String = "component",
+        ): String {
+            return """
+                **${componentName.replaceFirstChar { it.uppercase() }}** ($componentNameAttr) is not Protected \
+                [android:exported=true]
+            """.trimIndent()
+        }
+
+        private fun getDescriptionByComponentName(componentName: String = "component"): String {
+            return """
+                **${componentName.replaceFirstChar { it.uppercase() }}** is found to be shared with other apps on the \
+                device therefore leaving it accessible to any other application on the device.
+            """.trimIndent()
+        }
+
         private val IMPLEMENTATION = Implementation(
-            NotProtectedApplicationConfigurationDetector::class.java,
+            NotProtectedApplicationComponentsDetector::class.java,
             Scope.MANIFEST_SCOPE,
         )
 
+        // https://cs.android.com/android-studio/platform/tools/base/+/mirror-goog-studio-main:lint/libs/lint-checks/src/main/java/com/android/tools/lint/checks/ExportedFlagDetector.kt;l=116?q=IntentFilterExportedReceiver
         // TODO: Java doc
         @JvmField
         val ISSUE = Issue.create(
-            id = NotProtectedApplicationConfigurationId,
-            briefDescription = NotProtectedApplicationConfigurationDescription,
-            explanation = NotProtectedApplicationConfigurationDescription,
+            id = NotProtectedApplicationComponentsId,
+            briefDescription = getDescriptionByComponentName(),
+            explanation = getDescriptionByComponentName(),
             category = Category.SECURITY,
             priority = 3,
             severity = Severity.WARNING,

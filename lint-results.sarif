@@ -35,31 +35,13 @@
                             }
                         },
                         {
-                            "id": "MissingClass",
+                            "id": "NotProtectedApplicationComponentsId",
                             "shortDescription": {
-                                "text": "Missing registered class"
+                                "text": "Component is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device.",
+                                "markdown": "Component is found to be shared with other apps on the \\\ndevice therefore leaving it accessible to any other application on the device."
                             },
                             "fullDescription": {
-                                "text": "If a class is referenced in the manifest or in a layout file, it must also exist in the project (or in one of the libraries included by the project. This check helps uncover typos in registration names, or attempts to rename or move classes without updating the XML references\nproperly."
-                            },
-                            "defaultConfiguration": {
-                                "level": "error",
-                                "rank": 30
-                            },
-                            "properties": {
-                                "tags": [
-                                    "Correctness"
-                                ]
-                            }
-                        },
-                        {
-                            "id": "NotProtectedBroadcastReceiverId",
-                            "shortDescription": {
-                                "text": "A Broadcast Receiver is found to be shared with other apps on the device therefore             leaving it accessible to any other application on the device.",
-                                "markdown": "A Broadcast Receiver is found to be shared with other apps on the device therefore \\\n            leaving it accessible to any other application on the device."
-                            },
-                            "fullDescription": {
-                                "text": "A Broadcast Receiver is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device."
+                                "text": "Component is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device."
                             },
                             "defaultConfiguration": {
                                 "level": "warning",
@@ -118,11 +100,50 @@
             },
             "results": [
                 {
-                    "ruleId": "MissingClass",
+                    "ruleId": "InsecureWebViewImplementationIssueId",
+                    "ruleIndex": 0,
+                    "message": {
+                        "text": "Service (asd) is Protected by a permission, but the protection level of the permission should be checked.\nPermission: android.permission.BIND_JOB_SERVICE\n[android:exported=true]",
+                        "markdown": "**Service** (asd) is Protected by a \\\npermission, but the protection level of the permission should be checked.\n**Permission:** android.permission.BIND_JOB_SERVICE\n[android:exported=true]"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\AndroidManifest.xml"
+                                },
+                                "region": {
+                                    "startLine": 42,
+                                    "startColumn": 13,
+                                    "endLine": 42,
+                                    "endColumn": 69,
+                                    "charOffset": 1561,
+                                    "charLength": 56,
+                                    "snippet": {
+                                        "text": "android:permission=\"android.permission.BIND_JOB_SERVICE\""
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 40,
+                                    "endLine": 45,
+                                    "snippet": {
+                                        "text": "            android:name=\"asd\"\r\n            android:exported=\"true\"\r\n            android:permission=\"android.permission.BIND_JOB_SERVICE\"\r\n            tools:ignore=\"MissingClass\" />\r"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "a8bdd2c444974b99"
+                    }
+                },
+                {
+                    "ruleId": "NotProtectedApplicationComponentsId",
                     "ruleIndex": 1,
                     "message": {
-                        "text": "Class referenced in the manifest, com.inn.GlobalService.Version.UpdatedVersionAvailable, was not found in the project or the libraries",
-                        "markdown": "Class referenced in the manifest, `com.inn.GlobalService.Version.UpdatedVersionAvailable`, was not found in the project or the libraries"
+                        "text": "Service is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device.",
+                        "markdown": "Service is found to be shared with other apps on the \\\ndevice therefore leaving it accessible to any other application on the device."
                     },
                     "locations": [
                         {
@@ -132,250 +153,21 @@
                                     "uri": "app\\src\\main\\AndroidManifest.xml"
                                 },
                                 "region": {
-                                    "startLine": 29,
-                                    "startColumn": 33,
-                                    "endLine": 29,
-                                    "endColumn": 86,
-                                    "charOffset": 1144,
-                                    "charLength": 53,
-                                    "snippet": {
-                                        "text": "com.inn.GlobalService.Version.UpdatedVersionAvailable"
-                                    }
-                                },
-                                "contextRegion": {
-                                    "startLine": 27,
-                                    "endLine": 32,
-                                    "snippet": {
-                                        "text": "            </intent-filter>\r\n        </activity>\r\n        <receiver android:name=\"com.inn.GlobalService.Version.UpdatedVersionAvailable\" android:enabled=\"true\" android:process=\":remote\"\r\n            android:exported=\"false\">\r"
-                                    }
-                                }
-                            }
-                        }
-                    ],
-                    "partialFingerprints": {
-                        "sourceContext/v1": "f502aaf7a78758f9"
-                    }
-                },
-                {
-                    "ruleId": "InsecureWebViewImplementationIssueId",
-                    "ruleIndex": 0,
-                    "message": {
-                        "text": "Loading url from an intent to exported WebView allows other applications to have access to the target application"
-                    },
-                    "locations": [
-                        {
-                            "physicalLocation": {
-                                "artifactLocation": {
-                                    "uriBaseId": "%SRCROOT%",
-                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
-                                },
-                                "region": {
-                                    "startLine": 22,
-                                    "startColumn": 17,
-                                    "endLine": 22,
-                                    "endColumn": 24,
-                                    "charOffset": 601,
-                                    "charLength": 7,
-                                    "snippet": {
-                                        "text": "loadUrl"
-                                    }
-                                },
-                                "contextRegion": {
-                                    "startLine": 20,
-                                    "endLine": 25,
-                                    "snippet": {
-                                        "text": "        Intent i = new Intent();\n        String str = i.getStringExtra(\"reg_url\");\n        webView.loadUrl(str);\n        webView.loadUrl(i.getStringExtra(\"reg_url\"));"
-                                    }
-                                }
-                            }
-                        }
-                    ],
-                    "partialFingerprints": {
-                        "sourceContext/v1": "8e53de065bd47605"
-                    }
-                },
-                {
-                    "ruleId": "InsecureWebViewImplementationIssueId",
-                    "ruleIndex": 0,
-                    "message": {
-                        "text": "Loading url from an intent to exported WebView allows other applications to have access to the target application"
-                    },
-                    "locations": [
-                        {
-                            "physicalLocation": {
-                                "artifactLocation": {
-                                    "uriBaseId": "%SRCROOT%",
-                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
-                                },
-                                "region": {
-                                    "startLine": 23,
-                                    "startColumn": 17,
-                                    "endLine": 23,
-                                    "endColumn": 24,
-                                    "charOffset": 631,
-                                    "charLength": 7,
-                                    "snippet": {
-                                        "text": "loadUrl"
-                                    }
-                                },
-                                "contextRegion": {
-                                    "startLine": 21,
-                                    "endLine": 26,
-                                    "snippet": {
-                                        "text": "        String str = i.getStringExtra(\"reg_url\");\n        webView.loadUrl(str);\n        webView.loadUrl(i.getStringExtra(\"reg_url\"));\n"
-                                    }
-                                }
-                            }
-                        }
-                    ],
-                    "partialFingerprints": {
-                        "sourceContext/v1": "04c0c3ffb81ae4a0"
-                    }
-                },
-                {
-                    "ruleId": "InsecureWebViewImplementationIssueId",
-                    "ruleIndex": 0,
-                    "message": {
-                        "text": "Loading url from an intent to exported WebView allows other applications to have access to the target application"
-                    },
-                    "locations": [
-                        {
-                            "physicalLocation": {
-                                "artifactLocation": {
-                                    "uriBaseId": "%SRCROOT%",
-                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
-                                },
-                                "region": {
-                                    "startLine": 23,
-                                    "startColumn": 27,
-                                    "endLine": 23,
-                                    "endColumn": 41,
-                                    "charOffset": 641,
-                                    "charLength": 14,
-                                    "snippet": {
-                                        "text": "getStringExtra"
-                                    }
-                                },
-                                "contextRegion": {
-                                    "startLine": 21,
-                                    "endLine": 26,
-                                    "snippet": {
-                                        "text": "        String str = i.getStringExtra(\"reg_url\");\n        webView.loadUrl(str);\n        webView.loadUrl(i.getStringExtra(\"reg_url\"));\n"
-                                    }
-                                }
-                            }
-                        }
-                    ],
-                    "partialFingerprints": {
-                        "sourceContext/v1": "04c0c3ffb81ae4a0"
-                    }
-                },
-                {
-                    "ruleId": "InsecureWebViewImplementationIssueId",
-                    "ruleIndex": 0,
-                    "message": {
-                        "text": "Allowing to access content from any origin in the exported WebView allows attackers to read arbitrary files"
-                    },
-                    "locations": [
-                        {
-                            "physicalLocation": {
-                                "artifactLocation": {
-                                    "uriBaseId": "%SRCROOT%",
-                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
-                                },
-                                "region": {
-                                    "startLine": 25,
-                                    "startColumn": 31,
-                                    "endLine": 25,
-                                    "endColumn": 66,
-                                    "charOffset": 700,
-                                    "charLength": 35,
-                                    "snippet": {
-                                        "text": "setAllowUniversalAccessFromFileURLs"
-                                    }
-                                },
-                                "contextRegion": {
-                                    "startLine": 23,
-                                    "endLine": 28,
-                                    "snippet": {
-                                        "text": "        webView.loadUrl(i.getStringExtra(\"reg_url\"));\n\n        webView.getSettings().setAllowUniversalAccessFromFileURLs(true);\n"
-                                    }
-                                }
-                            }
-                        }
-                    ],
-                    "partialFingerprints": {
-                        "sourceContext/v1": "a9fa208f2d2c9317"
-                    }
-                },
-                {
-                    "ruleId": "InsecureWebViewImplementationIssueId",
-                    "ruleIndex": 0,
-                    "message": {
-                        "text": "Creating interface between webpage's JS and the client side Java allows XSS and token stealing"
-                    },
-                    "locations": [
-                        {
-                            "physicalLocation": {
-                                "artifactLocation": {
-                                    "uriBaseId": "%SRCROOT%",
-                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
-                                },
-                                "region": {
-                                    "startLine": 27,
-                                    "startColumn": 17,
-                                    "endLine": 27,
-                                    "endColumn": 39,
-                                    "charOffset": 760,
-                                    "charLength": 22,
-                                    "snippet": {
-                                        "text": "addJavascriptInterface"
-                                    }
-                                },
-                                "contextRegion": {
-                                    "startLine": 25,
-                                    "endLine": 30,
-                                    "snippet": {
-                                        "text": "        webView.getSettings().setAllowUniversalAccessFromFileURLs(true);\n\n        webView.addJavascriptInterface(new WebAppInterface(this), \"Android\");\n    }"
-                                    }
-                                }
-                            }
-                        }
-                    ],
-                    "partialFingerprints": {
-                        "sourceContext/v1": "d3b7fb5188706ea6"
-                    }
-                },
-                {
-                    "ruleId": "NotProtectedBroadcastReceiverId",
-                    "ruleIndex": 2,
-                    "message": {
-                        "text": "A Broadcast Receiver is found to be shared with other apps on the device therefore             leaving it accessible to any other application on the device."
-                    },
-                    "level": "error",
-                    "locations": [
-                        {
-                            "physicalLocation": {
-                                "artifactLocation": {
-                                    "uriBaseId": "%SRCROOT%",
-                                    "uri": "app\\src\\main\\AndroidManifest.xml"
-                                },
-                                "region": {
-                                    "startLine": 15,
+                                    "startLine": 41,
                                     "startColumn": 13,
-                                    "endLine": 15,
+                                    "endLine": 41,
                                     "endColumn": 36,
-                                    "charOffset": 556,
+                                    "charOffset": 1524,
                                     "charLength": 23,
                                     "snippet": {
                                         "text": "android:exported=\"true\""
                                     }
                                 },
                                 "contextRegion": {
-                                    "startLine": 13,
-                                    "endLine": 18,
+                                    "startLine": 39,
+                                    "endLine": 44,
                                     "snippet": {
-                                        "text": "        <activity\r\n            android:name=\".MainActivity\"\r\n            android:exported=\"true\">\r\n            <intent-filter>\r"
+                                        "text": "        <service\r\n            android:name=\"asd\"\r\n            android:exported=\"true\"\r\n            android:permission=\"android.permission.BIND_JOB_SERVICE\"\r"
                                     }
                                 }
                             }
@@ -395,10 +187,10 @@
                                     "replacements": [
                                         {
                                             "deletedRegion": {
-                                                "startLine": 15,
+                                                "startLine": 41,
                                                 "startColumn": 13,
-                                                "charOffset": 556,
-                                                "endLine": 15,
+                                                "charOffset": 1524,
+                                                "endLine": 41,
                                                 "endColumn": 36,
                                                 "charLength": 23
                                             },
@@ -412,81 +204,12 @@
                         }
                     ],
                     "partialFingerprints": {
-                        "sourceContext/v1": "33d1682923468a8f"
-                    }
-                },
-                {
-                    "ruleId": "NotProtectedBroadcastReceiverId",
-                    "ruleIndex": 2,
-                    "message": {
-                        "text": "A Broadcast Receiver is found to be shared with other apps on the device therefore             leaving it accessible to any other application on the device."
-                    },
-                    "level": "error",
-                    "locations": [
-                        {
-                            "physicalLocation": {
-                                "artifactLocation": {
-                                    "uriBaseId": "%SRCROOT%",
-                                    "uri": "app\\src\\main\\AndroidManifest.xml"
-                                },
-                                "region": {
-                                    "startLine": 22,
-                                    "startColumn": 45,
-                                    "endLine": 22,
-                                    "endColumn": 68,
-                                    "charOffset": 856,
-                                    "charLength": 23,
-                                    "snippet": {
-                                        "text": "android:exported=\"true\""
-                                    }
-                                },
-                                "contextRegion": {
-                                    "startLine": 20,
-                                    "endLine": 25,
-                                    "snippet": {
-                                        "text": "            </intent-filter>\r\n        </activity>\r\n        <activity android:name=\".JavaClass\" android:exported=\"true\">\r\n            <intent-filter>\r"
-                                    }
-                                }
-                            }
-                        }
-                    ],
-                    "fixes": [
-                        {
-                            "description": {
-                                "text": "Replace android:exported=\"true\""
-                            },
-                            "artifactChanges": [
-                                {
-                                    "artifactLocation": {
-                                        "uriBaseId": "%SRCROOT%",
-                                        "uri": "app\\src\\main\\AndroidManifest.xml"
-                                    },
-                                    "replacements": [
-                                        {
-                                            "deletedRegion": {
-                                                "startLine": 22,
-                                                "startColumn": 45,
-                                                "charOffset": 856,
-                                                "endLine": 22,
-                                                "endColumn": 68,
-                                                "charLength": 23
-                                            },
-                                            "insertedContent": {
-                                                "text": "android:exported=\"false\"\n"
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ],
-                    "partialFingerprints": {
-                        "sourceContext/v1": "bca9c064db2cc352"
+                        "sourceContext/v1": "b17de93887e5e872"
                     }
                 },
                 {
                     "ruleId": "ObsoleteSdkInt",
-                    "ruleIndex": 3,
+                    "ruleIndex": 2,
                     "message": {
                         "text": "This folder configuration (v24) is unnecessary; minSdkVersion is 28. Merge all the resources in this folder into drawable.",
                         "markdown": "This folder configuration (`v24`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `drawable`."
@@ -510,7 +233,7 @@
                 },
                 {
                     "ruleId": "ObsoleteSdkInt",
-                    "ruleIndex": 3,
+                    "ruleIndex": 2,
                     "message": {
                         "text": "This folder configuration (v26) is unnecessary; minSdkVersion is 28. Merge all the resources in this folder into mipmap-anydpi.",
                         "markdown": "This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `mipmap-anydpi`."
@@ -534,7 +257,7 @@
                 },
                 {
                     "ruleId": "UnusedResources",
-                    "ruleIndex": 4,
+                    "ruleIndex": 3,
                     "message": {
                         "text": "The resource R.layout.activity_java appears to be unused",
                         "markdown": "The resource `R.layout.activity_java` appears to be unused"

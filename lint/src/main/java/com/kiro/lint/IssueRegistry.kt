@@ -15,7 +15,8 @@ class IssueRegistry : IssueRegistry() {
             InsufficientCryptographyDetector.ISSUE,
             InsecureWebViewImplementationDetector.ISSUE,
             IPAddressDisclosureDetector.ISSUE,
-            NotProtectedApplicationConfigurationDetector.ISSUE,
+            NotProtectedApplicationComponentsDetector.ISSUE,
+            InsecureApplicationComponentsDetector.ISSUE,
         )
 
     override val api: Int = CURRENT_API

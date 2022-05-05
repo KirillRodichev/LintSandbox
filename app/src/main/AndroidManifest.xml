@@ -19,19 +19,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".JavaClass" android:exported="true">
+        <activity
+            android:name=".JavaClass"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.ANSWER" />
             </intent-filter>
         </activity>
-        <receiver android:name="com.inn.GlobalService.Version.UpdatedVersionAvailable" android:enabled="true" android:process=":remote"
-            android:exported="false">
+        <!--<receiver
+            android:name="com.inn.GlobalService.Version.UpdatedVersionAvailable"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":remote">
             <intent-filter>
                 <action android:name="com.inn.GlobalService.Version.UpdatedVersionAvailable" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
+        <service
+            android:name="asd"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            tools:ignore="MissingClass" />
     </application>
 
 </manifest>
