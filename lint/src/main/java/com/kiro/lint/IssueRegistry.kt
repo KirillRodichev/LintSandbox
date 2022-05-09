@@ -25,6 +25,7 @@ class IssueRegistry : IssueRegistry() {
             AllowBackupApplicationDetector.ISSUE,
             AndroidSecretCodeUsageDetector.ISSUE,
             HiddenElementsDetector.ISSUE,
+            InsecureFileOperatingModeDetector.ISSUE,
         )
 
     override val api: Int = CURRENT_API

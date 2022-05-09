@@ -32,14 +32,16 @@ class IncorrectDefaultPermissionsDetector : Detector(), SourceCodeScanner {
                 includeReceiver = false,
                 includeArguments = false
             ),
-            message = ISSUE.getBriefDescription(TextFormat.TEXT),
+            message = ISSUE.getBriefDescription(TextFormat.RAW),
         )
     }
 
     companion object {
         private const val IncorrectDefaultPermissionsIssueId = "IncorrectDefaultPermissionsIssueId"
-        private const val IncorrectDefaultPermissionsIssueDescription =
-            "App can read/write to External Storage. Any App can read data written to External Storage."
+        private val IncorrectDefaultPermissionsIssueDescription = """
+            App can read/write to External Storage. Any App can read data written to External Storage. \
+            **CWE-276: Incorrect Default Permissions** https://cwe.mitre.org/data/definitions/276.html
+        """.trimIndent()
 
         private val IMPLEMENTATION = Implementation(
             IncorrectDefaultPermissionsDetector::class.java,

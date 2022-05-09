@@ -8,8 +8,8 @@ import org.jetbrains.uast.ULiteralExpression
 
 @Suppress("UnstableApiUsage")
 class IPAddressDisclosureDetector : Detector(), SourceCodeScanner {
-    override fun getApplicableUastTypes(): List<Class<out UElement>> =
-        listOf(ULiteralExpression::class.java)
+
+    override fun getApplicableUastTypes(): List<Class<out UElement>> = listOf(ULiteralExpression::class.java)
 
     override fun createUastHandler(context: JavaContext): UElementHandler =
         object : UElementHandler() {
@@ -28,15 +28,17 @@ class IPAddressDisclosureDetector : Detector(), SourceCodeScanner {
             issue = ISSUE,
             scope = node,
             location = context.getLocation(node),
-            message = ISSUE.getBriefDescription(TextFormat.TEXT),
+            message = ISSUE.getBriefDescription(TextFormat.RAW),
         )
     }
 
     companion object {
         private const val IPAddressDisclosureIssueId = "IPAddressDisclosureIssueId"
-        private const val IPAddressDisclosureIssueDescription = """
-            The app exposes ip address
-        """
+        private val IPAddressDisclosureIssueDescription = """
+            The app exposes ip address. \
+            **CWE-200: Information Exposure** https://cwe.mitre.org/data/definitions/200.html
+        """.trimIndent()
+
         private val IMPLEMENTATION = Implementation(
             IPAddressDisclosureDetector::class.java,
             Scope.JAVA_FILE_SCOPE

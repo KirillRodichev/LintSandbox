@@ -102,7 +102,7 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
             // loadUrl, addJavascriptInterface
             if (evaluator.isMemberInClass(method, "android.webkit.WebView")) {
                 if (method.name == "addJavascriptInterface" && isCallerMatched && isVariableMatched) {
-                    reportUsage(context, node, method, IssueTypesEnum.ADD_JS_INTERFACE)
+                    reportUsage(context, node, IssueTypesEnum.ADD_JS_INTERFACE)
                     return
                 }
                 val argument = node.valueArguments[0]
@@ -113,7 +113,7 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
                     isCallerMatched = true
                 } else if (argumentMethodName == "getStringExtra") {
                     // in case of the getStringExtra was passed directly to the loadUrl method
-                    reportUsage(context, node, method, IssueTypesEnum.LOAD_URL)
+                    reportUsage(context, node, IssueTypesEnum.LOAD_URL)
                     return
                 }
             // getStringExtra
@@ -125,12 +125,12 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
             } else if (evaluator.isMemberInClass(method, "android.webkit.WebSettings")) {
                 val argument = node.valueArguments[0]
                 if (argument.evaluate() == true) {
-                    reportUsage(context, node, method, IssueTypesEnum.ALLOW_UNIVERSAL_ACCESS)
+                    reportUsage(context, node, IssueTypesEnum.ALLOW_UNIVERSAL_ACCESS)
                     return
                 }
             }
             if (isCallerMatched && isVariableMatched) {
-                reportUsage(context, node, method, IssueTypesEnum.LOAD_URL)
+                reportUsage(context, node, IssueTypesEnum.LOAD_URL)
             }
         }
     }
@@ -138,9 +138,14 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
     private fun reportUsage(
         context: JavaContext,
         node: UCallExpression,
-        method: PsiMethod,
         issueType: IssueTypesEnum,
     ) {
+        val message = IssueTypeToReportMessageMap[issueType] ?: ISSUE.getBriefDescription(TextFormat.TEXT)
+        val reportMessage = """
+            $message \
+            **CWE-749: Exposed Dangerous Method or Function** https://cwe.mitre.org/data/definitions/749.html
+        """.trimIndent()
+
         context.report(
             issue = ISSUE,
             scope = node,
@@ -149,7 +154,7 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
                 includeReceiver = false,
                 includeArguments = false
             ),
-            message = IssueTypeToReportMessageMap[issueType] ?: ISSUE.getBriefDescription(TextFormat.TEXT),
+            message = reportMessage,
         )
     }
 
@@ -168,13 +173,13 @@ class InsecureWebViewImplementationDetector : Detector(), SourceCodeScanner, Xml
 
         private const val InsecureWebViewImplementationIssueId = "InsecureWebViewImplementationIssueId"
         private const val InsecureWebViewImplementationIssueDescription = """
-            The software provides an Applications Programming Interface (API) or similar interface 
-            for interaction with external actors, but the interface includes a dangerous method or 
+            The software provides an Applications Programming Interface (API) or similar interface \
+            for interaction with external actors, but the interface includes a dangerous method or \
             function that is not properly restricted.
         """
         private const val InsecureWebViewImplementationIssueExplanation = """
-            This weakness can lead to a wide variety of resultant weaknesses, depending on the 
-            behavior of the exposed method. It can apply to any number of technologies and 
+            This weakness can lead to a wide variety of resultant weaknesses, depending on the \
+            behavior of the exposed method. It can apply to any number of technologies and \
             approaches, such as ActiveX controls, Java functions, IOCTLs, and so on.
         """
 

@@ -6,8 +6,8 @@ import org.jetbrains.uast.UCallExpression
 
 @Suppress("UnstableApiUsage")
 class InsufficientlyRandomValuesDetector : Detector(), SourceCodeScanner {
-    override fun getApplicableConstructorTypes(): List<String>?
-        = listOf("java.util.Random")
+
+    override fun getApplicableConstructorTypes(): List<String> = listOf("java.util.Random")
 
     override fun visitConstructor(
         context: JavaContext,
@@ -39,16 +39,17 @@ class InsufficientlyRandomValuesDetector : Detector(), SourceCodeScanner {
                 includeReceiver = false,
                 includeArguments = false
             ),
-            message = ISSUE.getBriefDescription(TextFormat.TEXT),
+            message = ISSUE.getBriefDescription(TextFormat.RAW),
             quickfixData = quickfixData,
         )
     }
 
     companion object {
         private const val InsufficientlyRandomValuesIssueId = "InsufficientlyRandomValuesIssueId"
-        private const val InsufficientlyRandomValuesIssueDescription = """
-            Use of java.util.Random is prohibited
-        """
+        private val InsufficientlyRandomValuesIssueDescription = """
+            Use of `java.util.Random` is prohibited \
+            **CWE-330: Use of Insufficiently Random Values** https://cwe.mitre.org/data/definitions/330.html
+        """.trimIndent()
         private const val InsufficientlyRandomValuesIssueExplanation = """
             When software generates predictable values in a context requiring unpredictability, it 
             may be possible for an attacker to guess the next value that will be generated, and 

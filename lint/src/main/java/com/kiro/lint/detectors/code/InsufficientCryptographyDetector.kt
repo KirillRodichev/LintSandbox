@@ -9,6 +9,7 @@ import org.jetbrains.uast.UExpression
 
 @Suppress("UnstableApiUsage")
 class InsufficientCryptographyDetector : Detector(), SourceCodeScanner {
+
     override fun getApplicableMethodNames(): List<String> = listOf("getInstance")
 
     override fun visitMethodCall(
@@ -41,6 +42,10 @@ class InsufficientCryptographyDetector : Detector(), SourceCodeScanner {
                     algorithmMode == "ECB"
                 ) {
                     reportMessage = packageSpecificReportMessagesMap[SpecificMessageKeysEnum.ECB]!!
+                } else if (algorithmName == "AES" && algorithmMode == null && algorithmPadding == null) {
+                    reportMessage = packageSpecificReportMessagesMap[SpecificMessageKeysEnum.AES]!!
+                } else if (algorithmName == "RSA" && algorithmPadding == "NoPadding") {
+                    reportMessage = packageSpecificReportMessagesMap[SpecificMessageKeysEnum.RSA]!!
                 }
                 if (reportMessage != null) {
                     reportUsage(context, argument, argumentValue, "AES/CBC/NoPadding", reportMessage)
@@ -104,6 +109,11 @@ class InsufficientCryptographyDetector : Detector(), SourceCodeScanner {
         replaceWith: String,
         message: String = ISSUE.getBriefDescription(TextFormat.TEXT),
     ) {
+        val reportMessage = """
+            $message \
+            **CWE-327: Use of a Broken or Risky Cryptographic Algorithm** https://cwe.mitre.org/data/definitions/327.html
+        """.trimIndent()
+
         val quickfixData = LintFix.create()
             .name("Replace with a sufficient algorithm: %s".format(replaceWith))
             .replace()
@@ -117,7 +127,7 @@ class InsufficientCryptographyDetector : Detector(), SourceCodeScanner {
             issue = ISSUE,
             scope = node,
             location = context.getLocation(node),
-            message = message,
+            message = reportMessage,
             quickfixData = quickfixData,
         )
     }
@@ -126,23 +136,36 @@ class InsufficientCryptographyDetector : Detector(), SourceCodeScanner {
         enum class SpecificMessageKeysEnum {
             CBC,
             ECB,
+            AES,
+            RSA,
             Generic,
         }
 
         val packageSpecificReportMessagesMap = mapOf(
-            SpecificMessageKeysEnum.CBC to "The App uses the encryption mode CBC with PKCS5/PKCS7 padding. This configuration is vulnerable to padding oracle attacks.",
+            SpecificMessageKeysEnum.CBC to """
+                The App uses the encryption mode CBC with PKCS5/PKCS7 padding. \
+                This configuration is vulnerable to padding oracle attacks.
+            """.trimIndent(),
             SpecificMessageKeysEnum.ECB to "The ECB mode is known to be a weak",
+            SpecificMessageKeysEnum.AES to """
+                Calling `Cipher.getInstance("AES")` will return AES ECB mode by default. \
+                ECB mode is known to be weak as it results in the same ciphertext for identical blocks of plaintext.
+            """.trimIndent(),
+            SpecificMessageKeysEnum.RSA to """
+                This App uses RSA Crypto without OAEP padding. The purpose of the padding scheme is to prevent a \
+                number of attacks on RSA that only work when the encryption is performed without padding.
+            """.trimIndent(),
             SpecificMessageKeysEnum.Generic to "The %s is known to be a weak cryptographic algorithm."
         )
 
         private const val InsufficientCryptographyIssueId = "InsufficientCryptographyIssueId"
         private const val InsufficientCryptographyIssueDescription = """
-            The use of a broken or risky cryptographic algorithm is an unnecessary risk that may 
+            The use of a broken or risky cryptographic algorithm is an unnecessary risk that may \ 
             result in the exposure of sensitive information.
         """
         private const val InsufficientCryptographyIssueExplanation = """
-            The use of a non-standard algorithm is dangerous because a determined attacker may be 
-            able to break the algorithm and compromise whatever data has been protected. 
+            The use of a non-standard algorithm is dangerous because a determined attacker may be \
+            able to break the algorithm and compromise whatever data has been protected. \
             Well-known techniques may exist to break the algorithm.
         """
 

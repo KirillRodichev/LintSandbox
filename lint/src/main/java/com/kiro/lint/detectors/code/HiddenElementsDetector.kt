@@ -32,7 +32,7 @@ class HiddenElementsDetector : Detector(), SourceCodeScanner {
         context.report(
             issue = ISSUE,
             location = context.getLocation(expression),
-            message = ISSUE.getBriefDescription(TextFormat.TEXT)
+            message = ISSUE.getBriefDescription(TextFormat.RAW)
         )
     }
 
@@ -41,8 +41,10 @@ class HiddenElementsDetector : Detector(), SourceCodeScanner {
         const val VIEW_INVISIBLE = 4
 
         private const val HiddenElementsIssueId = "HiddenElementsIssueId"
-        private const val HiddenElementsIssueDescription =
-            "Hidden elements in view can be used to hide data from user. But this data can be leaked"
+        private val HiddenElementsIssueDescription = """
+            Hidden elements in view can be used to hide data from user. But this data can be leaked. \
+            **CWE-919:  Weaknesses in Mobile Applications** https://cwe.mitre.org/data/definitions/919.html
+        """.trimIndent()
 
         private val IMPLEMENTATION = Implementation(
             HiddenElementsDetector::class.java,
