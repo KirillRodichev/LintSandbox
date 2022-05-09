@@ -2,6 +2,7 @@ package com.kiro.lintsandbox;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
@@ -25,6 +26,8 @@ public class JavaClass extends AppCompatActivity {
         webView.getSettings().setAllowUniversalAccessFromFileURLs(true);
 
         webView.addJavascriptInterface(new WebAppInterface(this), "Android");
+
+        webView.setVisibility(View.INVISIBLE);
     }
 
     public static String getUserToken() {

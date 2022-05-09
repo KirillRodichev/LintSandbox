@@ -1,4 +1,4 @@
-package com.kiro.lint.detectors
+package com.kiro.lint.detectors.complex
 
 import com.android.SdkConstants
 import com.android.tools.lint.client.api.UElementHandler
@@ -11,8 +11,6 @@ import com.intellij.psi.impl.source.tree.JavaElementType.METHOD_CALL_EXPRESSION
 import com.intellij.psi.impl.source.tree.JavaElementType.REFERENCE_EXPRESSION
 import org.jetbrains.uast.*
 import org.w3c.dom.Element
-import org.w3c.dom.Node
-import org.w3c.dom.NodeList
 import java.util.*
 import kotlin.collections.ArrayList
 

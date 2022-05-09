@@ -17,6 +17,43 @@
                     "language": "en-US",
                     "rules": [
                         {
+                            "id": "AllowBackupApplicationId",
+                            "shortDescription": {
+                                "text": "Application Data can be Backed up [android:allowBackup=true]",
+                                "markdown": "Application Data can be Backed up `[android:allowBackup=true]`"
+                            },
+                            "fullDescription": {
+                                "text": "This flag allows anyone to backup your application data via adb. It allows users who have enabled USB debugging to copy application data off of the device."
+                            },
+                            "defaultConfiguration": {
+                                "level": "warning",
+                                "rank": 80
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Security"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "HiddenElementsIssueId",
+                            "shortDescription": {
+                                "text": "Hidden elements in view can be used to hide data from user. But this data can be leaked"
+                            },
+                            "fullDescription": {
+                                "text": "Hidden elements in view can be used to hide data from user. But this data can be leaked"
+                            },
+                            "defaultConfiguration": {
+                                "level": "warning",
+                                "rank": 70
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Security"
+                                ]
+                            }
+                        },
+                        {
                             "id": "InsecureWebViewImplementationIssueId",
                             "shortDescription": {
                                 "text": "The software provides an Applications Programming Interface (API) or similar interface \n            for interaction with external actors, but the interface includes a dangerous method or \n            function that is not properly restricted."
@@ -38,10 +75,11 @@
                             "id": "NotProtectedApplicationComponentsId",
                             "shortDescription": {
                                 "text": "Component is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device.",
-                                "markdown": "Component is found to be shared with other apps on the \\\ndevice therefore leaving it accessible to any other application on the device."
+                                "markdown": "**Component** is found to be shared with other apps on the \\\ndevice therefore leaving it accessible to any other application on the device."
                             },
                             "fullDescription": {
-                                "text": "Component is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device."
+                                "text": "Component is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device.",
+                                "markdown": "**Component** is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device."
                             },
                             "defaultConfiguration": {
                                 "level": "warning",
@@ -100,50 +138,49 @@
             },
             "results": [
                 {
-                    "ruleId": "InsecureWebViewImplementationIssueId",
-                    "ruleIndex": 0,
+                    "ruleId": "HiddenElementsIssueId",
+                    "ruleIndex": 1,
                     "message": {
-                        "text": "Service (asd) is Protected by a permission, but the protection level of the permission should be checked.\nPermission: android.permission.BIND_JOB_SERVICE\n[android:exported=true]",
-                        "markdown": "**Service** (asd) is Protected by a \\\npermission, but the protection level of the permission should be checked.\n**Permission:** android.permission.BIND_JOB_SERVICE\n[android:exported=true]"
+                        "text": "Hidden elements in view can be used to hide data from user. But this data can be leaked"
                     },
                     "locations": [
                         {
                             "physicalLocation": {
                                 "artifactLocation": {
                                     "uriBaseId": "%SRCROOT%",
-                                    "uri": "app\\src\\main\\AndroidManifest.xml"
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
                                 },
                                 "region": {
-                                    "startLine": 42,
-                                    "startColumn": 13,
-                                    "endLine": 42,
-                                    "endColumn": 69,
-                                    "charOffset": 1561,
-                                    "charLength": 56,
+                                    "startLine": 30,
+                                    "startColumn": 17,
+                                    "endLine": 30,
+                                    "endColumn": 30,
+                                    "charOffset": 865,
+                                    "charLength": 13,
                                     "snippet": {
-                                        "text": "android:permission=\"android.permission.BIND_JOB_SERVICE\""
+                                        "text": "setVisibility"
                                     }
                                 },
                                 "contextRegion": {
-                                    "startLine": 40,
-                                    "endLine": 45,
+                                    "startLine": 28,
+                                    "endLine": 33,
                                     "snippet": {
-                                        "text": "            android:name=\"asd\"\r\n            android:exported=\"true\"\r\n            android:permission=\"android.permission.BIND_JOB_SERVICE\"\r\n            tools:ignore=\"MissingClass\" />\r"
+                                        "text": "        webView.addJavascriptInterface(new WebAppInterface(this), \"Android\");\n\n        webView.setVisibility(View.INVISIBLE);\n    }"
                                     }
                                 }
                             }
                         }
                     ],
                     "partialFingerprints": {
-                        "sourceContext/v1": "a8bdd2c444974b99"
+                        "sourceContext/v1": "58cce0611a12c50d"
                     }
                 },
                 {
-                    "ruleId": "NotProtectedApplicationComponentsId",
-                    "ruleIndex": 1,
+                    "ruleId": "InsecureWebViewImplementationIssueId",
+                    "ruleIndex": 2,
                     "message": {
-                        "text": "Service is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device.",
-                        "markdown": "Service is found to be shared with other apps on the \\\ndevice therefore leaving it accessible to any other application on the device."
+                        "text": "Service (asd) is Protected by a permission, but the protection level of the permission should be checked. Permission: android.permission.BIND_JOB_SERVICE [android:exported=true]",
+                        "markdown": "**Service** (asd) is Protected by a \\\npermission, but the protection level of the permission should be checked. \\\n**Permission:** android.permission.BIND_JOB_SERVICE [android:exported=true]"
                     },
                     "locations": [
                         {
@@ -156,16 +193,384 @@
                                     "startLine": 41,
                                     "startColumn": 13,
                                     "endLine": 41,
+                                    "endColumn": 69,
+                                    "charOffset": 1558,
+                                    "charLength": 56,
+                                    "snippet": {
+                                        "text": "android:permission=\"android.permission.BIND_JOB_SERVICE\""
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 39,
+                                    "endLine": 44,
+                                    "snippet": {
+                                        "text": "            android:name=\"asd\"\r\n            android:exported=\"true\"\r\n            android:permission=\"android.permission.BIND_JOB_SERVICE\"\r\n            tools:ignore=\"MissingClass\" />\r"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "a8bdd2c444974b99"
+                    }
+                },
+                {
+                    "ruleId": "InsecureWebViewImplementationIssueId",
+                    "ruleIndex": 2,
+                    "message": {
+                        "text": "Loading url from an intent to exported WebView allows other applications to have access to the target application"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
+                                },
+                                "region": {
+                                    "startLine": 23,
+                                    "startColumn": 17,
+                                    "endLine": 23,
+                                    "endColumn": 24,
+                                    "charOffset": 627,
+                                    "charLength": 7,
+                                    "snippet": {
+                                        "text": "loadUrl"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 21,
+                                    "endLine": 26,
+                                    "snippet": {
+                                        "text": "        Intent i = new Intent();\n        String str = i.getStringExtra(\"reg_url\");\n        webView.loadUrl(str);\n        webView.loadUrl(i.getStringExtra(\"reg_url\"));"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "8e53de065bd47605"
+                    }
+                },
+                {
+                    "ruleId": "InsecureWebViewImplementationIssueId",
+                    "ruleIndex": 2,
+                    "message": {
+                        "text": "Loading url from an intent to exported WebView allows other applications to have access to the target application"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
+                                },
+                                "region": {
+                                    "startLine": 24,
+                                    "startColumn": 17,
+                                    "endLine": 24,
+                                    "endColumn": 24,
+                                    "charOffset": 657,
+                                    "charLength": 7,
+                                    "snippet": {
+                                        "text": "loadUrl"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 22,
+                                    "endLine": 27,
+                                    "snippet": {
+                                        "text": "        String str = i.getStringExtra(\"reg_url\");\n        webView.loadUrl(str);\n        webView.loadUrl(i.getStringExtra(\"reg_url\"));\n"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "04c0c3ffb81ae4a0"
+                    }
+                },
+                {
+                    "ruleId": "InsecureWebViewImplementationIssueId",
+                    "ruleIndex": 2,
+                    "message": {
+                        "text": "Loading url from an intent to exported WebView allows other applications to have access to the target application"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
+                                },
+                                "region": {
+                                    "startLine": 24,
+                                    "startColumn": 27,
+                                    "endLine": 24,
+                                    "endColumn": 41,
+                                    "charOffset": 667,
+                                    "charLength": 14,
+                                    "snippet": {
+                                        "text": "getStringExtra"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 22,
+                                    "endLine": 27,
+                                    "snippet": {
+                                        "text": "        String str = i.getStringExtra(\"reg_url\");\n        webView.loadUrl(str);\n        webView.loadUrl(i.getStringExtra(\"reg_url\"));\n"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "04c0c3ffb81ae4a0"
+                    }
+                },
+                {
+                    "ruleId": "InsecureWebViewImplementationIssueId",
+                    "ruleIndex": 2,
+                    "message": {
+                        "text": "Allowing to access content from any origin in the exported WebView allows attackers to read arbitrary files"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
+                                },
+                                "region": {
+                                    "startLine": 26,
+                                    "startColumn": 31,
+                                    "endLine": 26,
+                                    "endColumn": 66,
+                                    "charOffset": 726,
+                                    "charLength": 35,
+                                    "snippet": {
+                                        "text": "setAllowUniversalAccessFromFileURLs"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 24,
+                                    "endLine": 29,
+                                    "snippet": {
+                                        "text": "        webView.loadUrl(i.getStringExtra(\"reg_url\"));\n\n        webView.getSettings().setAllowUniversalAccessFromFileURLs(true);\n"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "a9fa208f2d2c9317"
+                    }
+                },
+                {
+                    "ruleId": "InsecureWebViewImplementationIssueId",
+                    "ruleIndex": 2,
+                    "message": {
+                        "text": "Creating interface between webpage's JS and the client side Java allows XSS and token stealing"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\java\\com\\kiro\\lintsandbox\\JavaClass.java"
+                                },
+                                "region": {
+                                    "startLine": 28,
+                                    "startColumn": 17,
+                                    "endLine": 28,
+                                    "endColumn": 39,
+                                    "charOffset": 786,
+                                    "charLength": 22,
+                                    "snippet": {
+                                        "text": "addJavascriptInterface"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 26,
+                                    "endLine": 31,
+                                    "snippet": {
+                                        "text": "        webView.getSettings().setAllowUniversalAccessFromFileURLs(true);\n\n        webView.addJavascriptInterface(new WebAppInterface(this), \"Android\");\n"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "2b111fb097cb1d1a"
+                    }
+                },
+                {
+                    "ruleId": "AllowBackupApplicationId",
+                    "ruleIndex": 0,
+                    "message": {
+                        "text": "AllowBackup is Enabled For App [android:testOnly=true]",
+                        "markdown": "**AllowBackup** is Enabled For App `[android:testOnly=true]`"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\AndroidManifest.xml"
+                                },
+                                "region": {
+                                    "startLine": 7,
+                                    "startColumn": 9,
+                                    "endLine": 7,
+                                    "endColumn": 35,
+                                    "charOffset": 227,
+                                    "charLength": 26,
+                                    "snippet": {
+                                        "text": "android:allowBackup=\"true\""
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 5,
+                                    "endLine": 10,
+                                    "snippet": {
+                                        "text": "\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "fixes": [
+                        {
+                            "description": {
+                                "text": "Disable back up for Application",
+                                "markdown": "**Disable** back up for Application"
+                            },
+                            "artifactChanges": [
+                                {
+                                    "artifactLocation": {
+                                        "uriBaseId": "%SRCROOT%",
+                                        "uri": "app\\src\\main\\AndroidManifest.xml"
+                                    },
+                                    "replacements": [
+                                        {
+                                            "deletedRegion": {
+                                                "startLine": 7,
+                                                "startColumn": 9,
+                                                "charOffset": 227,
+                                                "endLine": 7,
+                                                "endColumn": 35,
+                                                "charLength": 26
+                                            },
+                                            "insertedContent": {
+                                                "text": "android:allowBackup=\"false\"\n"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "48320be09282280d"
+                    }
+                },
+                {
+                    "ruleId": "NotProtectedApplicationComponentsId",
+                    "ruleIndex": 3,
+                    "message": {
+                        "text": "Activity (.JavaClass) is not Protected [android:exported=true]",
+                        "markdown": "**Activity** (.JavaClass) is not Protected \\\n[android:exported=true]"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\AndroidManifest.xml"
+                                },
+                                "region": {
+                                    "startLine": 24,
+                                    "startColumn": 13,
+                                    "endLine": 24,
                                     "endColumn": 36,
-                                    "charOffset": 1524,
+                                    "charOffset": 882,
                                     "charLength": 23,
                                     "snippet": {
                                         "text": "android:exported=\"true\""
                                     }
                                 },
                                 "contextRegion": {
-                                    "startLine": 39,
-                                    "endLine": 44,
+                                    "startLine": 22,
+                                    "endLine": 27,
+                                    "snippet": {
+                                        "text": "        <activity\r\n            android:name=\".JavaClass\"\r\n            android:exported=\"true\">\r\n            <intent-filter>\r"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "fixes": [
+                        {
+                            "description": {
+                                "text": "Replace android:exported=\"true\""
+                            },
+                            "artifactChanges": [
+                                {
+                                    "artifactLocation": {
+                                        "uriBaseId": "%SRCROOT%",
+                                        "uri": "app\\src\\main\\AndroidManifest.xml"
+                                    },
+                                    "replacements": [
+                                        {
+                                            "deletedRegion": {
+                                                "startLine": 24,
+                                                "startColumn": 13,
+                                                "charOffset": 882,
+                                                "endLine": 24,
+                                                "endColumn": 36,
+                                                "charLength": 23
+                                            },
+                                            "insertedContent": {
+                                                "text": "android:exported=\"false\"\n"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "e53c616747818723"
+                    }
+                },
+                {
+                    "ruleId": "NotProtectedApplicationComponentsId",
+                    "ruleIndex": 3,
+                    "message": {
+                        "text": "Service (asd) is not Protected [android:exported=true]",
+                        "markdown": "**Service** (asd) is not Protected \\\n[android:exported=true]"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app\\src\\main\\AndroidManifest.xml"
+                                },
+                                "region": {
+                                    "startLine": 40,
+                                    "startColumn": 13,
+                                    "endLine": 40,
+                                    "endColumn": 36,
+                                    "charOffset": 1521,
+                                    "charLength": 23,
+                                    "snippet": {
+                                        "text": "android:exported=\"true\""
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 38,
+                                    "endLine": 43,
                                     "snippet": {
                                         "text": "        <service\r\n            android:name=\"asd\"\r\n            android:exported=\"true\"\r\n            android:permission=\"android.permission.BIND_JOB_SERVICE\"\r"
                                     }
@@ -187,10 +592,10 @@
                                     "replacements": [
                                         {
                                             "deletedRegion": {
-                                                "startLine": 41,
+                                                "startLine": 40,
                                                 "startColumn": 13,
-                                                "charOffset": 1524,
-                                                "endLine": 41,
+                                                "charOffset": 1521,
+                                                "endLine": 40,
                                                 "endColumn": 36,
                                                 "charLength": 23
                                             },
@@ -209,7 +614,7 @@
                 },
                 {
                     "ruleId": "ObsoleteSdkInt",
-                    "ruleIndex": 2,
+                    "ruleIndex": 4,
                     "message": {
                         "text": "This folder configuration (v24) is unnecessary; minSdkVersion is 28. Merge all the resources in this folder into drawable.",
                         "markdown": "This folder configuration (`v24`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `drawable`."
@@ -233,7 +638,7 @@
                 },
                 {
                     "ruleId": "ObsoleteSdkInt",
-                    "ruleIndex": 2,
+                    "ruleIndex": 4,
                     "message": {
                         "text": "This folder configuration (v26) is unnecessary; minSdkVersion is 28. Merge all the resources in this folder into mipmap-anydpi.",
                         "markdown": "This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `mipmap-anydpi`."
@@ -257,7 +662,7 @@
                 },
                 {
                     "ruleId": "UnusedResources",
-                    "ruleIndex": 3,
+                    "ruleIndex": 5,
                     "message": {
                         "text": "The resource R.layout.activity_java appears to be unused",
                         "markdown": "The resource `R.layout.activity_java` appears to be unused"

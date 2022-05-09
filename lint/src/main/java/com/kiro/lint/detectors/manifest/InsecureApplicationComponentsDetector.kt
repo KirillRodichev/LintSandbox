@@ -1,9 +1,10 @@
-package com.kiro.lint.detectors
+package com.kiro.lint.detectors.manifest
 
 import com.android.SdkConstants
 import com.android.sdklib.AndroidVersion
 import com.android.tools.lint.detector.api.*
 import com.android.utils.subtag
+import com.kiro.lint.detectors.complex.InsecureWebViewImplementationDetector
 import com.kiro.lint.utils.Utils
 import org.w3c.dom.Attr
 import org.w3c.dom.Element
@@ -65,9 +66,9 @@ class InsecureApplicationComponentsDetector : Detector(), XmlScanner {
     }
 
     override fun filterIncident(context: Context, incident: Incident, map: LintMap): Boolean {
-        if (context.mainProject.targetSdk >= AndroidVersion.VersionCodes.S) {
+        /*if (context.mainProject.targetSdk >= AndroidVersion.VersionCodes.S) {
             incident.overrideSeverity(Severity.ERROR)
-        }
+        }*/
         return true
     }
 

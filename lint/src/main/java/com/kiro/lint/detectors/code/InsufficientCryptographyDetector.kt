@@ -1,4 +1,4 @@
-package com.kiro.lint.detectors
+package com.kiro.lint.detectors.code
 
 import com.android.tools.lint.detector.api.*
 import com.intellij.psi.PsiMethod

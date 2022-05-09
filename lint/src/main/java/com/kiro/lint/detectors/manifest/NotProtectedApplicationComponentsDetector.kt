@@ -1,4 +1,4 @@
-package com.kiro.lint.detectors
+package com.kiro.lint.detectors.manifest
 
 import com.android.SdkConstants
 import com.android.sdklib.AndroidVersion.VersionCodes.S
@@ -44,9 +44,9 @@ class NotProtectedApplicationComponentsDetector : Detector(), XmlScanner {
     }
 
     override fun filterIncident(context: Context, incident: Incident, map: LintMap): Boolean {
-        if (context.mainProject.targetSdk >= S) {
+        /*if (context.mainProject.targetSdk >= S) {
             incident.overrideSeverity(Severity.ERROR)
-        }
+        }*/
         return true
     }
 

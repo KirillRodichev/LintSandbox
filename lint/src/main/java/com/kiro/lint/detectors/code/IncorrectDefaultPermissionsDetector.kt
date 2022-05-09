@@ -1,4 +1,4 @@
-package com.kiro.lint.detectors
+package com.kiro.lint.detectors.code
 
 import com.android.tools.lint.detector.api.*
 import com.intellij.psi.PsiMethod
@@ -6,8 +6,8 @@ import org.jetbrains.uast.UCallExpression
 
 @Suppress("UnstableApiUsage")
 class IncorrectDefaultPermissionsDetector : Detector(), SourceCodeScanner {
-    override fun getApplicableMethodNames(): List<String>? =
-        listOf("getExternalStorageDirectory")
+
+    override fun getApplicableMethodNames(): List<String> = listOf("getExternalStorageDirectory")
 
     override fun visitMethodCall(
         context: JavaContext,
