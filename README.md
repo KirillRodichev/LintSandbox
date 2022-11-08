@@ -29,10 +29,10 @@
 | Test Only Application | N/A |
 
 ## AST example
-<img src="/docs/img/ast.PNG" width="800">
+<img src="./docs/img/ast.png" width="800">
 
 ## Interface
-<img src="/docs/img/interface.PNG" width="800">
+<img src="./docs/img/interface.png" width="800">
 
 1. Issue highlight
 2. Title
@@ -42,4 +42,4 @@
 6. Ability to ignore the issue
 
 ## HTMP report
-<img src="/docs/img/output.PNG" width="800">
+<img src="./docs/img/output.png" width="800">
